@@ -1,0 +1,90 @@
+HELP.md
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
+.vscode/
+
+### Environment Variables ###
+.env
+.env.*
+*.env
+.envrc
+
+### Spring Boot Sensitive Profiles ###
+application-local.yaml
+application-local.yml
+application-local.properties
+application-secret.yaml
+application-secret.yml
+application-secret.properties
+application-prod.yaml
+application-prod.yml
+application-prod.properties
+
+### Logs ###
+*.log
+logs/
+
+### Database Files ###
+*.db
+*.sqlite
+*.h2.db
+
+### Keys and Certificates ###
+*.pem
+*.key
+*.p12
+*.jks
+*.keystore
+
+### HTTP Test Files ###
+cookies.txt
+src/main/resources/http/cookies.txt
+
+### OS Generated ###
+.DS_Store
+Thumbs.db
+ehthumbs.db
+
+### Claude Local Settings ###
+.claude/settings.local.json
+
+### Docker Local Override ###
+docker-compose.override.yml
+
+### Temporary Files ###
+*.bak
+*.tmp
+*.swp
