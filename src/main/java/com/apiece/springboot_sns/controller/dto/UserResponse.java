@@ -1,10 +1,11 @@
 package com.apiece.springboot_sns.controller.dto;
 
-import com.apiece.springboot_sns.domain.user.User;
+import com.apiece.springboot_sns.config.CustomUserDetails;
 
-public record UserResponse(Long id, String email, String nickname) {
+public record UserResponse(Long id, String email, String username) {
 
-    public static UserResponse from(User user) {
-        return new UserResponse(user.getId(), user.getEmail(), user.getNickname());
+    public static UserResponse from(CustomUserDetails userDetails) {
+        return new UserResponse(
+                userDetails.getId(), userDetails.getEmail(), userDetails.getDisplayName());
     }
 }

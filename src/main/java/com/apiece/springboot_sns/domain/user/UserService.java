@@ -11,20 +11,14 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public User signUp(String email, String password, String nickname) {
+    public User signup(String email, String password, String username) {
         if (userRepository.existsByEmail(email)) {
-            throw UserException.emailAlreadyExists();
+            throw new UserException("Email already exists: " + email);
         }
+
         String encodedPassword = passwordEncoder.encode(password);
-        User user = new User(email, encodedPassword, nickname);
+        User user = new User(email, encodedPassword, username);
+
         return userRepository.save(user);
-    }
-
-    public User findById(Long id) {
-        return userRepository.findById(id).orElseThrow(UserException::notFound);
-    }
-
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(UserException::notFound);
     }
 }

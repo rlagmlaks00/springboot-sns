@@ -1,6 +1,8 @@
 package com.apiece.springboot_sns.controller;
 
-import com.apiece.springboot_sns.controller.dto.SignUpRequest;
+import com.apiece.springboot_sns.config.CustomUserDetails;
+import com.apiece.springboot_sns.controller.dto.SignupRequest;
+import com.apiece.springboot_sns.controller.dto.SignupResponse;
 import com.apiece.springboot_sns.controller.dto.UserResponse;
 import com.apiece.springboot_sns.domain.user.User;
 import com.apiece.springboot_sns.domain.user.UserService;
@@ -8,7 +10,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,21 +22,14 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/api/users")
-    public ResponseEntity<UserResponse> signUp(@Valid @RequestBody SignUpRequest request) {
-        User user = userService.signUp(request.email(), request.password(), request.nickname());
-        return ResponseEntity.status(HttpStatus.CREATED).body(UserResponse.from(user));
+    @PostMapping("/api/v1/signup")
+    public ResponseEntity<SignupResponse> signup(@Valid @RequestBody SignupRequest request) {
+        User user = userService.signup(request.email(), request.password(), request.username());
+        return ResponseEntity.status(HttpStatus.CREATED).body(SignupResponse.from(user));
     }
 
-    @GetMapping("/api/users/{id}")
-    public ResponseEntity<UserResponse> getUser(@PathVariable Long id) {
-        User user = userService.findById(id);
-        return ResponseEntity.ok(UserResponse.from(user));
-    }
-
-    @GetMapping("/api/users/search")
-    public ResponseEntity<UserResponse> getUserByEmail(@RequestParam String email) {
-        User user = userService.findByEmail(email);
-        return ResponseEntity.ok(UserResponse.from(user));
+    @GetMapping("/api/v1/me")
+    public ResponseEntity<UserResponse> me(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        return ResponseEntity.ok(UserResponse.from(userDetails));
     }
 }
