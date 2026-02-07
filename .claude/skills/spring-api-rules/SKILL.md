@@ -1,7 +1,7 @@
 ---
 name: spring-api-rules
 description: Define controllers, services, repositories, entities, DTOs for Spring Boot REST API. Use when user mentions API, endpoint, controller, service, repository, entity, DTO, CRUD, domain, feature, function, or REST creation.
-allowed-tools: Read, Write, Edit, Glob, Grep, Bash, LSP
+1allowed-tools: Read, Write, Edit, Glob, Grep, Bash, LSP, mcp__plugin_context7_context7__resolve-library-id, mcp__plugin_context7_context7__query-docs
 ---
 
 # Spring API Development Rules
@@ -88,3 +88,17 @@ When creating a new API, create a shell script in `src/main/resources/http/`:
 - Use `-b cookies.txt` for authenticated requests
 - Add descriptive echo statements before each curl command
 - Start with `#!/bin/bash` shebang
+
+## Documentation Lookup (Context7 MCP)
+
+When unsure about Spring Boot, JPA, or other library APIs, use Context7 MCP to fetch the latest documentation:
+
+1. **Resolve library ID**: Use `resolve-library-id` with the library name
+   - Example: "spring boot", "spring data jpa", "lombok"
+2. **Query documentation**: Use `query-docs` with the resolved ID and your question
+   - Example: "How to use @Transactional", "JpaRepository query methods"
+
+Use Context7 when:
+- Implementing unfamiliar Spring annotations or features
+- Checking the latest API changes or deprecations
+- Looking up correct usage patterns for libraries

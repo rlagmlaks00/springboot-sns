@@ -17,10 +17,12 @@ public class SecurityConfig {
 
     private final LoginSuccessHandler loginSuccessHandler;
     private final LoginFailureHandler loginFailureHandler;
+    private final RedisSessionLogoutHandler redisSessionLogoutHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return Argon2PasswordEncoder.defaultsForSpringSecurity_v5_8();
+
     }
 
     @Bean
@@ -43,7 +45,12 @@ public class SecurityConfig {
                                         .passwordParameter("password")
                                         .successHandler(loginSuccessHandler)
                                         .failureHandler(loginFailureHandler))
-                .logout(logout -> logout.logoutUrl("/api/v1/logout").logoutSuccessUrl("/"))
+                .logout(logout -> logout
+                        .logoutUrl("/api/v1/logout")
+                        .addLogoutHandler(redisSessionLogoutHandler)
+                        .invalidateHttpSession(true)
+                        .deleteCookies("SESSION")
+                        .logoutSuccessUrl("/"))
                 .build();
     }
 }

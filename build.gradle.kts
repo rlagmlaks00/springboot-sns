@@ -31,6 +31,8 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-databind")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.boot:spring-boot-starter-data-redis")
+    implementation("org.springframework.session:spring-session-data-redis")
     implementation("org.bouncycastle:bcprov-jdk18on:1.80")
     runtimeOnly("com.h2database:h2")
     runtimeOnly("org.postgresql:postgresql")

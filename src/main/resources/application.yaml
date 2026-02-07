@@ -1,6 +1,10 @@
 spring:
   application:
     name: springboot-sns
+  data:
+    redis:
+      host: localhost
+      port: 6379
   datasource:
     url: jdbc:h2:mem:snsdb
     driver-class-name: org.h2.Driver
@@ -14,3 +18,9 @@ spring:
     hibernate:
       ddl-auto: create-drop
     show-sql: true
+
+logging:
+  level:
+    io.lettuce.core: INFO
+    org.springframework.data.redis: INFO
+    org.springframework.session: INFO
