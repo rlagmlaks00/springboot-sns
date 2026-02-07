@@ -1,5 +1,6 @@
 package com.apiece.springboot_sns.controller;
 
+import com.apiece.springboot_sns.domain.follow.FollowException;
 import com.apiece.springboot_sns.domain.user.UserException;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,6 +12,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(FollowException.class)
+    public ResponseEntity<Map<String, String>> handleFollowException(FollowException e) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
 
     @ExceptionHandler(UserException.class)
     public ResponseEntity<Map<String, String>> handleUserException(UserException e) {

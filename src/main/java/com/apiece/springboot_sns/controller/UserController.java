@@ -1,6 +1,6 @@
 package com.apiece.springboot_sns.controller;
 
-import com.apiece.springboot_sns.config.CustomUserDetails;
+import com.apiece.springboot_sns.config.AuthUser;
 import com.apiece.springboot_sns.controller.dto.SignupRequest;
 import com.apiece.springboot_sns.controller.dto.SignupResponse;
 import com.apiece.springboot_sns.controller.dto.UserResponse;
@@ -10,7 +10,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,7 +28,7 @@ public class UserController {
     }
 
     @GetMapping("/api/v1/me")
-    public ResponseEntity<UserResponse> me(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        return ResponseEntity.ok(UserResponse.from(userDetails));
+    public ResponseEntity<UserResponse> me(@AuthUser User user) {
+        return ResponseEntity.ok(UserResponse.from(user));
     }
 }
