@@ -11,3 +11,21 @@ As the AI Agent, you **must not** perform any actions or make any changes to the
 
 - Before deleting files, always get developer approval.
 - Do not touch `git push`
+
+## Code Style
+
+### Record/DTO Formatting
+- Each validation annotation on a separate line
+- Blank line between fields
+- Closing parenthesis on a separate line
+
+```java
+public record ExampleRequest(
+        @NotBlank(message = "Field is required")
+        @Size(min = 2, max = 50, message = "Field must be between 2 and 50 characters")
+        String field1,
+
+        @NotBlank(message = "Another field is required")
+        String field2
+) {}
+```
