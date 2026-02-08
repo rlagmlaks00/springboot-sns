@@ -16,11 +16,15 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.persistence.Version;
 import lombok.Getter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @Table(
         name = "follow_counts",
         uniqueConstraints = @UniqueConstraint(columnNames = "user_id"))
+@SQLDelete(sql = "UPDATE follow_counts SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
+@SQLRestriction("deleted_at IS NULL")
 @Getter
 public class FollowCount extends BaseTimeEntity {
 

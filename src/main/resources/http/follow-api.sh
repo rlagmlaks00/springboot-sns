@@ -60,6 +60,18 @@ curl -s -X GET "$BASE_URL/api/v1/follow/count/$USER_B_ID" \
   -b "$COOKIES"
 echo -e "\n"
 
+# 4-3. 팔로워 목록 조회 - 사용자 B (A가 팔로워)
+echo "=== 4-3. 팔로워 목록 조회 - 사용자 B ==="
+curl -s -X GET "$BASE_URL/api/v1/follow/followers/$USER_B_ID?page=0&size=20" \
+  -b "$COOKIES"
+echo -e "\n"
+
+# 4-4. 팔로잉 목록 조회 - 사용자 A (B를 팔로잉)
+echo "=== 4-4. 팔로잉 목록 조회 - 사용자 A ==="
+curl -s -X GET "$BASE_URL/api/v1/follow/followings/$USER_A_ID?page=0&size=20" \
+  -b "$COOKIES"
+echo -e "\n"
+
 # 5. 팔로우 중복 - A가 B를 다시 팔로우 (실패)
 echo "=== 5. 팔로우 중복 (실패) ==="
 curl -s -X POST "$BASE_URL/api/v1/follow/$USER_B_ID" \
@@ -90,6 +102,18 @@ echo -e "\n"
 # 7-2. 언팔로우 후 팔로우 수 조회 - 사용자 B (follower: 0)
 echo "=== 7-2. 언팔로우 후 팔로우 수 조회 - 사용자 B ==="
 curl -s -X GET "$BASE_URL/api/v1/follow/count/$USER_B_ID" \
+  -b "$COOKIES"
+echo -e "\n"
+
+# 7-3. 언팔로우 후 팔로워 목록 조회 - 사용자 B (빈 목록)
+echo "=== 7-3. 언팔로우 후 팔로워 목록 조회 - 사용자 B ==="
+curl -s -X GET "$BASE_URL/api/v1/follow/followers/$USER_B_ID?page=0&size=20" \
+  -b "$COOKIES"
+echo -e "\n"
+
+# 7-4. 언팔로우 후 팔로잉 목록 조회 - 사용자 A (빈 목록)
+echo "=== 7-4. 언팔로우 후 팔로잉 목록 조회 - 사용자 A ==="
+curl -s -X GET "$BASE_URL/api/v1/follow/followings/$USER_A_ID?page=0&size=20" \
   -b "$COOKIES"
 echo -e "\n"
 

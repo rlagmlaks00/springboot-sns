@@ -2,6 +2,8 @@ package com.apiece.springboot_sns.controller;
 
 import com.apiece.springboot_sns.config.AuthUser;
 import com.apiece.springboot_sns.controller.dto.FollowCountResponse;
+import com.apiece.springboot_sns.controller.dto.FollowerResponse;
+import com.apiece.springboot_sns.controller.dto.FollowingResponse;
 import com.apiece.springboot_sns.domain.follow.FollowCount;
 import com.apiece.springboot_sns.domain.follow.FollowService;
 import com.apiece.springboot_sns.domain.user.User;
@@ -9,6 +11,8 @@ import com.apiece.springboot_sns.domain.user.UserException;
 import com.apiece.springboot_sns.domain.user.UserRepository;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -40,6 +44,24 @@ public class FollowController {
         User following = findUserById(userId);
         retryOnOptimisticLock(() -> followService.unfollow(follower, following));
         return ResponseEntity.ok(Map.of("message", "언팔로우 성공"));
+    }
+
+    @GetMapping("/api/v1/follow/followers/{userId}")
+    public ResponseEntity<Page<FollowerResponse>> getFollowers(
+            @PathVariable Long userId, Pageable pageable) {
+        User user = findUserById(userId);
+        Page<FollowerResponse> followers =
+                followService.getFollowers(user, pageable).map(FollowerResponse::from);
+        return ResponseEntity.ok(followers);
+    }
+
+    @GetMapping("/api/v1/follow/followings/{userId}")
+    public ResponseEntity<Page<FollowingResponse>> getFollowings(
+            @PathVariable Long userId, Pageable pageable) {
+        User user = findUserById(userId);
+        Page<FollowingResponse> followings =
+                followService.getFollowings(user, pageable).map(FollowingResponse::from);
+        return ResponseEntity.ok(followings);
     }
 
     @GetMapping("/api/v1/follow/count/{userId}")

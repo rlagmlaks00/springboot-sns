@@ -2,6 +2,8 @@ package com.apiece.springboot_sns.domain.follow;
 
 import com.apiece.springboot_sns.domain.user.User;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,6 +43,16 @@ public class FollowService {
 
         getOrCreateFollowCount(follower).decrementFollowing();
         getOrCreateFollowCount(following).decrementFollower();
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Follow> getFollowers(User user, Pageable pageable) {
+        return followRepository.findByFollowing(user, pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Follow> getFollowings(User user, Pageable pageable) {
+        return followRepository.findByFollower(user, pageable);
     }
 
     @Transactional(readOnly = true)
