@@ -1,5 +1,8 @@
 package com.apiece.springboot_sns.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletResponse;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,6 +12,7 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.session.security.SpringSessionBackedSessionRegistry;
 
 @Configuration
 @EnableWebSecurity
@@ -18,6 +22,8 @@ public class SecurityConfig {
     private final LoginSuccessHandler loginSuccessHandler;
     private final LoginFailureHandler loginFailureHandler;
     private final RedisSessionLogoutHandler redisSessionLogoutHandler;
+    private final SpringSessionBackedSessionRegistry<?> sessionRegistry;
+    private final ObjectMapper objectMapper;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -50,7 +56,44 @@ public class SecurityConfig {
                         .addLogoutHandler(redisSessionLogoutHandler)
                         .invalidateHttpSession(true)
                         .deleteCookies("SESSION")
-                        .logoutSuccessUrl("/"))
+                        .logoutSuccessHandler((request, response, authentication) -> {
+                            response.setStatus(HttpServletResponse.SC_OK);
+                            response.setContentType("application/json");
+                            response.setCharacterEncoding("UTF-8");
+                            objectMapper.writeValue(
+                                    response.getWriter(),
+                                    Map.of("message", "Logout successful"));
+                        }))
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            response.setContentType("application/json");
+                            response.setCharacterEncoding("UTF-8");
+                            objectMapper.writeValue(
+                                    response.getWriter(),
+                                    Map.of("error", "Authentication is required"));
+                        })
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                            response.setContentType("application/json");
+                            response.setCharacterEncoding("UTF-8");
+                            objectMapper.writeValue(
+                                    response.getWriter(),
+                                    Map.of("error", "Access denied"));
+                        }))
+                .sessionManagement(session -> session
+                        .maximumSessions(2)
+                        .maxSessionsPreventsLogin(false)
+                        .sessionRegistry(sessionRegistry)
+                        .expiredSessionStrategy(event -> {
+                            var response = event.getResponse();
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            response.setContentType("application/json");
+                            response.setCharacterEncoding("UTF-8");
+                            objectMapper.writeValue(
+                                    response.getWriter(),
+                                    Map.of("error", "Session has expired"));
+                        }))
                 .build();
     }
 }
