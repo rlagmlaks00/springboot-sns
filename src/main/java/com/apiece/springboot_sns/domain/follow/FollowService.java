@@ -1,6 +1,7 @@
 package com.apiece.springboot_sns.domain.follow;
 
 import com.apiece.springboot_sns.domain.user.User;
+import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -8,16 +9,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
 public class FollowService {
 
     private final FollowRepository followRepository;
     private final FollowCountRepository followCountRepository;
-
-    public FollowService(
-            FollowRepository followRepository, FollowCountRepository followCountRepository) {
-        this.followRepository = followRepository;
-        this.followCountRepository = followCountRepository;
-    }
 
     @Transactional
     public void follow(User follower, User following) {
@@ -29,8 +25,10 @@ public class FollowService {
         }
         followRepository.save(new Follow(follower, following));
 
-        getOrCreateFollowCount(follower).incrementFollowing();
-        getOrCreateFollowCount(following).incrementFollower();
+        ensureFollowCountExists(follower);
+        ensureFollowCountExists(following);
+        followCountRepository.incrementFollowingCount(follower);
+        followCountRepository.incrementFollowerCount(following);
     }
 
     @Transactional
@@ -39,42 +37,41 @@ public class FollowService {
                 followRepository
                         .findByFollowerAndFollowing(follower, following)
                         .orElseThrow(() -> new FollowException("팔로우 관계가 존재하지 않습니다."));
-        followRepository.delete(follow);
+        followRepository.softDelete(follow.getId());
 
-        getOrCreateFollowCount(follower).decrementFollowing();
-        getOrCreateFollowCount(following).decrementFollower();
+        ensureFollowCountExists(follower);
+        ensureFollowCountExists(following);
+        followCountRepository.decrementFollowingCount(follower);
+        followCountRepository.decrementFollowerCount(following);
     }
 
-    @Transactional(readOnly = true)
     public Page<Follow> getFollowers(User user, Pageable pageable) {
         return followRepository.findByFollowing(user, pageable);
     }
 
-    @Transactional(readOnly = true)
     public Page<Follow> getFollowings(User user, Pageable pageable) {
         return followRepository.findByFollower(user, pageable);
     }
 
-    @Transactional(readOnly = true)
     public FollowCount getFollowCount(User user) {
         return followCountRepository
                 .findByUser(user)
                 .orElseGet(() -> new FollowCount(user));
     }
 
-    private FollowCount getOrCreateFollowCount(User user) {
-        return followCountRepository
-                .findByUser(user)
-                .orElseGet(() -> createFollowCount(user));
+    private void ensureFollowCountExists(User user) {
+        if (followCountRepository.findByUser(user).isEmpty()) {
+            createFollowCount(user);
+        }
     }
 
-    private FollowCount createFollowCount(User user) {
+    private void createFollowCount(User user) {
         try {
-            return followCountRepository.saveAndFlush(new FollowCount(user));
+            followCountRepository.saveAndFlush(new FollowCount(user));
         } catch (DataIntegrityViolationException e) {
-            return followCountRepository
-                    .findByUser(user)
-                    .orElseThrow(() -> new FollowException("팔로우 카운트 생성에 실패했습니다."));
+            followCountRepository
+                .findByUser(user)
+                .orElseThrow(() -> new FollowException("팔로우 카운트 생성에 실패했습니다."));
         }
     }
 }

@@ -14,7 +14,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
-import jakarta.persistence.Version;
 import lombok.Getter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
@@ -44,28 +43,9 @@ public class FollowCount extends BaseTimeEntity {
     @Column(nullable = false)
     private int followingCount = 0;
 
-    @Version
-    private Long version;
-
     protected FollowCount() {}
 
     public FollowCount(User user) {
         this.user = user;
-    }
-
-    public void incrementFollower() {
-        this.followerCount++;
-    }
-
-    public void decrementFollower() {
-        this.followerCount--;
-    }
-
-    public void incrementFollowing() {
-        this.followingCount++;
-    }
-
-    public void decrementFollowing() {
-        this.followingCount--;
     }
 }

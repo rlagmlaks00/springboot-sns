@@ -5,127 +5,133 @@ COOKIES="cookies.txt"
 
 rm -f "$COOKIES"
 
-# 1. 회원가입 - 사용자 A
-echo "=== 1. 회원가입 - 사용자 A ==="
-RESPONSE_A=$(curl -s -X POST "$BASE_URL/api/v1/signup" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "userA@test.com",
-    "password": "password123",
-    "username": "UserA"
-  }')
+# 1. Login - TestUser1 (A)
+echo "=== 1. Login - TestUser1 (A) ==="
+curl -s -X POST "$BASE_URL/api/v1/login" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "email=test1@example.com&password=password123" \
+  -c "$COOKIES"
+echo -e "\n"
+
+# 1-1. Get User A ID
+echo "=== 1-1. Get User A ID ==="
+RESPONSE_A=$(curl -s -X GET "$BASE_URL/api/v1/me" -b "$COOKIES")
 echo "$RESPONSE_A"
 USER_A_ID=$(echo "$RESPONSE_A" | grep -o '"id":[0-9]*' | grep -o '[0-9]*')
 echo "(userA_id=$USER_A_ID)"
 echo -e "\n"
 
-# 2. 회원가입 - 사용자 B
-echo "=== 2. 회원가입 - 사용자 B ==="
-RESPONSE_B=$(curl -s -X POST "$BASE_URL/api/v1/signup" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "userB@test.com",
-    "password": "password123",
-    "username": "UserB"
-  }')
+# 1-2. Login - TestUser2 (B) to get ID
+echo "=== 1-2. Login - TestUser2 (B) ==="
+rm -f "$COOKIES"
+curl -s -X POST "$BASE_URL/api/v1/login" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "email=test2@example.com&password=password123" \
+  -c "$COOKIES"
+echo -e "\n"
+
+# 1-3. Get User B ID
+echo "=== 1-3. Get User B ID ==="
+RESPONSE_B=$(curl -s -X GET "$BASE_URL/api/v1/me" -b "$COOKIES")
 echo "$RESPONSE_B"
 USER_B_ID=$(echo "$RESPONSE_B" | grep -o '"id":[0-9]*' | grep -o '[0-9]*')
 echo "(userB_id=$USER_B_ID)"
 echo -e "\n"
 
-# 3. 로그인 - 사용자 A
-echo "=== 3. 로그인 - 사용자 A ==="
+# 2. Re-login as User A for follow tests
+echo "=== 2. Re-login as User A ==="
+rm -f "$COOKIES"
 curl -s -X POST "$BASE_URL/api/v1/login" \
   -H "Content-Type: application/x-www-form-urlencoded" \
-  -d "email=userA@test.com&password=password123" \
+  -d "email=test1@example.com&password=password123" \
   -c "$COOKIES"
 echo -e "\n"
 
-# 4. 팔로우 - A가 B를 팔로우
-echo "=== 4. 팔로우 - A가 B를 팔로우 ==="
+# 3. Follow - A follows B
+echo "=== 3. Follow - A follows B ==="
 curl -s -X POST "$BASE_URL/api/v1/follow/$USER_B_ID" \
   -H "Content-Type: application/json" \
   -b "$COOKIES"
 echo -e "\n"
 
-# 4-1. 팔로우 수 조회 - 사용자 A (following: 1)
-echo "=== 4-1. 팔로우 수 조회 - 사용자 A ==="
+# 3-1. Follow count - User A (following: 1)
+echo "=== 3-1. Follow count - User A ==="
 curl -s -X GET "$BASE_URL/api/v1/follow/count/$USER_A_ID" \
   -b "$COOKIES"
 echo -e "\n"
 
-# 4-2. 팔로우 수 조회 - 사용자 B (follower: 1)
-echo "=== 4-2. 팔로우 수 조회 - 사용자 B ==="
+# 3-2. Follow count - User B (follower: 1)
+echo "=== 3-2. Follow count - User B ==="
 curl -s -X GET "$BASE_URL/api/v1/follow/count/$USER_B_ID" \
   -b "$COOKIES"
 echo -e "\n"
 
-# 4-3. 팔로워 목록 조회 - 사용자 B (A가 팔로워)
-echo "=== 4-3. 팔로워 목록 조회 - 사용자 B ==="
+# 3-3. Follower list - User B (A is follower)
+echo "=== 3-3. Follower list - User B ==="
 curl -s -X GET "$BASE_URL/api/v1/follow/followers/$USER_B_ID?page=0&size=20" \
   -b "$COOKIES"
 echo -e "\n"
 
-# 4-4. 팔로잉 목록 조회 - 사용자 A (B를 팔로잉)
-echo "=== 4-4. 팔로잉 목록 조회 - 사용자 A ==="
+# 3-4. Following list - User A (following B)
+echo "=== 3-4. Following list - User A ==="
 curl -s -X GET "$BASE_URL/api/v1/follow/followings/$USER_A_ID?page=0&size=20" \
   -b "$COOKIES"
 echo -e "\n"
 
-# 5. 팔로우 중복 - A가 B를 다시 팔로우 (실패)
-echo "=== 5. 팔로우 중복 (실패) ==="
+# 4. Duplicate follow - A follows B again (should fail)
+echo "=== 4. Duplicate follow (should fail) ==="
 curl -s -X POST "$BASE_URL/api/v1/follow/$USER_B_ID" \
   -H "Content-Type: application/json" \
   -b "$COOKIES"
 echo -e "\n"
 
-# 6. 자기 자신 팔로우 (실패)
-echo "=== 6. 자기 자신 팔로우 (실패) ==="
+# 5. Self follow (should fail)
+echo "=== 5. Self follow (should fail) ==="
 curl -s -X POST "$BASE_URL/api/v1/follow/$USER_A_ID" \
   -H "Content-Type: application/json" \
   -b "$COOKIES"
 echo -e "\n"
 
-# 7. 언팔로우 - A가 B를 언팔로우
-echo "=== 7. 언팔로우 - A가 B를 언팔로우 ==="
+# 6. Unfollow - A unfollows B
+echo "=== 6. Unfollow - A unfollows B ==="
 curl -s -X DELETE "$BASE_URL/api/v1/follow/$USER_B_ID" \
   -H "Content-Type: application/json" \
   -b "$COOKIES"
 echo -e "\n"
 
-# 7-1. 언팔로우 후 팔로우 수 조회 - 사용자 A (following: 0)
-echo "=== 7-1. 언팔로우 후 팔로우 수 조회 - 사용자 A ==="
+# 6-1. Follow count after unfollow - User A (following: 0)
+echo "=== 6-1. Follow count after unfollow - User A ==="
 curl -s -X GET "$BASE_URL/api/v1/follow/count/$USER_A_ID" \
   -b "$COOKIES"
 echo -e "\n"
 
-# 7-2. 언팔로우 후 팔로우 수 조회 - 사용자 B (follower: 0)
-echo "=== 7-2. 언팔로우 후 팔로우 수 조회 - 사용자 B ==="
+# 6-2. Follow count after unfollow - User B (follower: 0)
+echo "=== 6-2. Follow count after unfollow - User B ==="
 curl -s -X GET "$BASE_URL/api/v1/follow/count/$USER_B_ID" \
   -b "$COOKIES"
 echo -e "\n"
 
-# 7-3. 언팔로우 후 팔로워 목록 조회 - 사용자 B (빈 목록)
-echo "=== 7-3. 언팔로우 후 팔로워 목록 조회 - 사용자 B ==="
+# 6-3. Follower list after unfollow - User B (empty)
+echo "=== 6-3. Follower list after unfollow - User B ==="
 curl -s -X GET "$BASE_URL/api/v1/follow/followers/$USER_B_ID?page=0&size=20" \
   -b "$COOKIES"
 echo -e "\n"
 
-# 7-4. 언팔로우 후 팔로잉 목록 조회 - 사용자 A (빈 목록)
-echo "=== 7-4. 언팔로우 후 팔로잉 목록 조회 - 사용자 A ==="
+# 6-4. Following list after unfollow - User A (empty)
+echo "=== 6-4. Following list after unfollow - User A ==="
 curl -s -X GET "$BASE_URL/api/v1/follow/followings/$USER_A_ID?page=0&size=20" \
   -b "$COOKIES"
 echo -e "\n"
 
-# 8. 언팔로우 중복 - A가 B를 다시 언팔로우 (실패)
-echo "=== 8. 언팔로우 중복 (실패) ==="
+# 7. Duplicate unfollow - A unfollows B again (should fail)
+echo "=== 7. Duplicate unfollow (should fail) ==="
 curl -s -X DELETE "$BASE_URL/api/v1/follow/$USER_B_ID" \
   -H "Content-Type: application/json" \
   -b "$COOKIES"
 echo -e "\n"
 
-# 9. 존재하지 않는 사용자 팔로우 (실패)
-echo "=== 9. 존재하지 않는 사용자 팔로우 (실패) ==="
+# 8. Follow non-existent user (should fail)
+echo "=== 8. Follow non-existent user (should fail) ==="
 curl -s -X POST "$BASE_URL/api/v1/follow/9999" \
   -H "Content-Type: application/json" \
   -b "$COOKIES"

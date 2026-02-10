@@ -5,6 +5,9 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface FollowRepository extends JpaRepository<Follow, Long> {
 
@@ -15,4 +18,8 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
     Page<Follow> findByFollowing(User following, Pageable pageable);
 
     Page<Follow> findByFollower(User follower, Pageable pageable);
+
+    @Modifying(clearAutomatically = true)
+    @Query("UPDATE Follow f SET f.deletedAt = CURRENT_TIMESTAMP WHERE f.id = :id")
+    void softDelete(@Param("id") Long id);
 }

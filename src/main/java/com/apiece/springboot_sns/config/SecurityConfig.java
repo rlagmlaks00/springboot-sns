@@ -8,10 +8,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.savedrequest.NullRequestCache;
 import org.springframework.session.security.SpringSessionBackedSessionRegistry;
 
 @Configuration
@@ -21,7 +21,6 @@ public class SecurityConfig {
 
     private final LoginSuccessHandler loginSuccessHandler;
     private final LoginFailureHandler loginFailureHandler;
-    private final RedisSessionLogoutHandler redisSessionLogoutHandler;
     private final SpringSessionBackedSessionRegistry<?> sessionRegistry;
     private final ObjectMapper objectMapper;
 
@@ -38,12 +37,10 @@ public class SecurityConfig {
                         auth ->
                                 auth.requestMatchers(
                                                 "/api/v1/signup",
-                                                "/api/v1/login",
-                                                "/h2-console/**")
+                                                "/api/v1/login")
                                         .permitAll()
                                         .anyRequest()
                                         .authenticated())
-                .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .formLogin(
                         form ->
                                 form.loginProcessingUrl("/api/v1/login")
@@ -51,9 +48,9 @@ public class SecurityConfig {
                                         .passwordParameter("password")
                                         .successHandler(loginSuccessHandler)
                                         .failureHandler(loginFailureHandler))
+                .requestCache(cache -> cache.requestCache(new NullRequestCache()))
                 .logout(logout -> logout
                         .logoutUrl("/api/v1/logout")
-                        .addLogoutHandler(redisSessionLogoutHandler)
                         .invalidateHttpSession(true)
                         .deleteCookies("SESSION")
                         .logoutSuccessHandler((request, response, authentication) -> {

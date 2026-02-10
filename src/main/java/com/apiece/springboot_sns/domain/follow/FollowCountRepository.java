@@ -3,8 +3,27 @@ package com.apiece.springboot_sns.domain.follow;
 import com.apiece.springboot_sns.domain.user.User;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface FollowCountRepository extends JpaRepository<FollowCount, Long> {
 
     Optional<FollowCount> findByUser(User user);
+
+    @Modifying(clearAutomatically = true)
+    @Query("UPDATE FollowCount fc SET fc.followingCount = fc.followingCount + 1 WHERE fc.user = :user")
+    void incrementFollowingCount(@Param("user") User user);
+
+    @Modifying(clearAutomatically = true)
+    @Query("UPDATE FollowCount fc SET fc.followingCount = fc.followingCount - 1 WHERE fc.user = :user")
+    void decrementFollowingCount(@Param("user") User user);
+
+    @Modifying(clearAutomatically = true)
+    @Query("UPDATE FollowCount fc SET fc.followerCount = fc.followerCount + 1 WHERE fc.user = :user")
+    void incrementFollowerCount(@Param("user") User user);
+
+    @Modifying(clearAutomatically = true)
+    @Query("UPDATE FollowCount fc SET fc.followerCount = fc.followerCount - 1 WHERE fc.user = :user")
+    void decrementFollowerCount(@Param("user") User user);
 }
