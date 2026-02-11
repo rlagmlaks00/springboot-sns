@@ -1,4 +1,4 @@
-package com.apiece.springboot_sns.controller.dto;
+package com.apiece.springboot_sns.api.dto.user;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

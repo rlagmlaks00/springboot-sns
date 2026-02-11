@@ -1,7 +1,8 @@
 package com.apiece.springboot_sns.config;
 
 import com.apiece.springboot_sns.domain.user.User;
-import com.apiece.springboot_sns.domain.user.UserRepository;
+import com.apiece.springboot_sns.domain.user.UserService;
+import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -12,16 +13,16 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user =
-                userRepository
-                        .findByEmail(email)
-                        .orElseThrow(
-                                () -> new UsernameNotFoundException("User not found: " + email));
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userService.getByUsername(username);
 
-        return new CustomUserDetails(user);
+        return org.springframework.security.core.userdetails.User.builder()
+                .username(user.getUsername())
+                .password(user.getPassword())
+                .authorities(Collections.emptyList())
+                .build();
     }
 }

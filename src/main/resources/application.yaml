@@ -14,7 +14,7 @@ spring:
     password: sns1234
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:

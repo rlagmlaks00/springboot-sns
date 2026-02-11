@@ -1,9 +1,9 @@
-package com.apiece.springboot_sns.controller;
+package com.apiece.springboot_sns.api;
 
 import com.apiece.springboot_sns.config.AuthUser;
-import com.apiece.springboot_sns.controller.dto.SignupRequest;
-import com.apiece.springboot_sns.controller.dto.SignupResponse;
-import com.apiece.springboot_sns.controller.dto.UserResponse;
+import com.apiece.springboot_sns.api.dto.user.SignupRequest;
+import com.apiece.springboot_sns.api.dto.user.SignupResponse;
+import com.apiece.springboot_sns.api.dto.user.UserResponse;
 import com.apiece.springboot_sns.domain.user.User;
 import com.apiece.springboot_sns.domain.user.UserService;
 import jakarta.validation.Valid;

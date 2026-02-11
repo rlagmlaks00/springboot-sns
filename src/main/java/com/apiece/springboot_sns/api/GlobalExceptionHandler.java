@@ -1,4 +1,4 @@
-package com.apiece.springboot_sns.controller;
+package com.apiece.springboot_sns.api;
 
 import com.apiece.springboot_sns.domain.follow.FollowException;
 import com.apiece.springboot_sns.domain.user.UserException;

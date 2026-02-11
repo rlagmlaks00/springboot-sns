@@ -1,4 +1,4 @@
-package com.apiece.springboot_sns.controller.dto;
+package com.apiece.springboot_sns.api.dto.follow;
 
 import com.apiece.springboot_sns.domain.follow.Follow;
 import com.apiece.springboot_sns.domain.user.User;

@@ -1,11 +1,12 @@
 package com.apiece.springboot_sns.config;
 
 import com.apiece.springboot_sns.domain.user.User;
-import com.apiece.springboot_sns.domain.user.UserRepository;
+import com.apiece.springboot_sns.domain.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -16,7 +17,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @RequiredArgsConstructor
 public class AuthUserArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -31,13 +32,11 @@ public class AuthUserArgumentResolver implements HandlerMethodArgumentResolver {
             NativeWebRequest webRequest,
             WebDataBinderFactory binderFactory) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !(authentication.getPrincipal() instanceof CustomUserDetails)) {
+        if (authentication == null || !(authentication.getPrincipal() instanceof UserDetails)) {
             throw new IllegalStateException("Authentication is required");
         }
 
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        return userRepository
-                .findById(userDetails.getId())
-                .orElseThrow(() -> new IllegalStateException("User not found"));
+        String username = authentication.getName();
+        return userService.getByUsername(username);
     }
 }
