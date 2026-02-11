@@ -1,6 +1,6 @@
 package com.apiece.springboot_sns.api;
 
-import com.apiece.springboot_sns.config.AuthUser;
+import com.apiece.springboot_sns.config.auth.AuthUser;
 import com.apiece.springboot_sns.api.dto.user.SignupRequest;
 import com.apiece.springboot_sns.api.dto.user.SignupResponse;
 import com.apiece.springboot_sns.api.dto.user.UserResponse;

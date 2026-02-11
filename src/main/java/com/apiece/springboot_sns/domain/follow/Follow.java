@@ -12,7 +12,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
@@ -21,6 +23,7 @@ import org.hibernate.annotations.SQLRestriction;
 @SQLDelete(sql = "UPDATE follows SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
 @SQLRestriction("deleted_at IS NULL")
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Follow extends BaseTimeEntity {
 
     @Id
@@ -38,8 +41,6 @@ public class Follow extends BaseTimeEntity {
             name = "following_id",
             foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private User following;
-
-    protected Follow() {}
 
     public Follow(User follower, User following) {
         this.follower = follower;

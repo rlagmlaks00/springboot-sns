@@ -1,6 +1,6 @@
 package com.apiece.springboot_sns.api;
 
-import com.apiece.springboot_sns.config.AuthUser;
+import com.apiece.springboot_sns.config.auth.AuthUser;
 import com.apiece.springboot_sns.api.dto.follow.FollowerResponse;
 import com.apiece.springboot_sns.api.dto.follow.FollowingResponse;
 import com.apiece.springboot_sns.domain.follow.FollowService;

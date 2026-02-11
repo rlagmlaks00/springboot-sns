@@ -1,5 +1,6 @@
 package com.apiece.springboot_sns.config;
 
+import com.apiece.springboot_sns.config.auth.AuthUserArgumentResolver;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;

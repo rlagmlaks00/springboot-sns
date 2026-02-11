@@ -1,7 +1,7 @@
 package com.apiece.springboot_sns.api;
 
 import com.apiece.springboot_sns.api.dto.follow.FollowCountResponse;
-import com.apiece.springboot_sns.config.AuthUser;
+import com.apiece.springboot_sns.config.auth.AuthUser;
 import com.apiece.springboot_sns.domain.follow.FollowCount;
 import com.apiece.springboot_sns.domain.follow.FollowCountService;
 import com.apiece.springboot_sns.domain.user.User;
