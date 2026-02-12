@@ -1,8 +1,11 @@
 package com.apiece.springboot_sns.domain.user;
 
-public class UserException extends RuntimeException {
+import com.apiece.springboot_sns.domain.common.DomainErrorCode;
+import com.apiece.springboot_sns.domain.common.DomainException;
 
-    public UserException(String message) {
-        super(message);
+public class UserException extends DomainException {
+
+    public UserException(String message, DomainErrorCode errorCode) {
+        super(message, errorCode);
     }
 }

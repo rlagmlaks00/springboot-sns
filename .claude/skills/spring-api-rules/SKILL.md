@@ -12,8 +12,10 @@ Standard rules for Spring Boot REST API development in this project.
 
 ```
 com.apiece.springboot_sns
-├── controller/              # REST API controllers
+├── api/                     # REST API controllers
 │   └── dto/                 # Request/Response DTOs
+│       ├── user/            # User DTOs
+│       └── follow/          # Follow DTOs
 ├── domain/                  # Domain packages
 │   └── user/                # User domain
 │       ├── User.java        # Entity
@@ -39,7 +41,7 @@ com.apiece.springboot_sns
 
 ## DTO
 
-- Only controller DTOs go in `controller/dto` package
+- Only controller DTOs go in `api/dto/{domain}/` package
 - Use Java `record`
 - Request: `toEntity()` method
 - Response: `from(Entity)` static factory

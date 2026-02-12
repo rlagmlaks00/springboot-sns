@@ -10,7 +10,7 @@ rm -f "$COOKIES"
 echo "=== 1. Login ==="
 curl -s -X POST "$BASE_URL/api/v1/login" \
   -H "Content-Type: application/x-www-form-urlencoded" \
-  -d "email=test1@example.com&password=password123" \
+  -d "username=TestUser1&password=password123" \
   -c "$COOKIES"
 echo -e "\n"
 

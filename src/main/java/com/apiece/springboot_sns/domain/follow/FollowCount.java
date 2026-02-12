@@ -14,7 +14,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
@@ -25,6 +27,7 @@ import org.hibernate.annotations.SQLRestriction;
 @SQLDelete(sql = "UPDATE follow_counts SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
 @SQLRestriction("deleted_at IS NULL")
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FollowCount extends BaseTimeEntity {
 
     @Id
@@ -42,8 +45,6 @@ public class FollowCount extends BaseTimeEntity {
 
     @Column(nullable = false)
     private int followingCount = 0;
-
-    protected FollowCount() {}
 
     public FollowCount(User user) {
         this.user = user;
