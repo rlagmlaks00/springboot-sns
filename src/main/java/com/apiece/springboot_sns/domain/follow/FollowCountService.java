@@ -12,12 +12,14 @@ public class FollowCountService {
 
     private final FollowCountRepository followCountRepository;
 
+    /** 팔로우 카운트 조회 */
     public FollowCount getFollowCount(User user) {
         return followCountRepository
                 .findByUser(user)
                 .orElseGet(() -> new FollowCount(user));
     }
 
+    /** 팔로우 카운트 증가 */
     @Transactional
     public void incrementCounts(User follower, User following) {
         ensureFollowCountExists(follower);
@@ -26,6 +28,7 @@ public class FollowCountService {
         followCountRepository.incrementFollowerCount(following);
     }
 
+    /** 팔로우 카운트 감소 */
     @Transactional
     public void decrementCounts(User follower, User following) {
         ensureFollowCountExists(follower);

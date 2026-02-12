@@ -19,12 +19,14 @@ public class FollowCountController {
     private final FollowCountService followCountService;
     private final UserService userService;
 
+    /** 내 팔로우 카운트 조회 */
     @GetMapping("/api/v1/follow/count/me")
     public ResponseEntity<FollowCountResponse> getMyFollowCount(@AuthUser User user) {
         FollowCount followCount = followCountService.getFollowCount(user);
         return ResponseEntity.ok(FollowCountResponse.from(followCount));
     }
 
+    /** 사용자 팔로우 카운트 조회 */
     @GetMapping("/api/v1/follow/count/{username}")
     public ResponseEntity<FollowCountResponse> getFollowCount(@PathVariable String username) {
         User user = userService.getByUsername(username);
