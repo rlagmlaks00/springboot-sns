@@ -62,6 +62,16 @@ public class PostService {
         return postRepository.findByUserWithUser(user, pageable);
     }
 
+    /** 좋아요 수 증가 */
+    public void incrementLikeCount(Long postId) {
+        postRepository.incrementLikeCount(postId);
+    }
+
+    /** 좋아요 수 감소 */
+    public void decrementLikeCount(Long postId) {
+        postRepository.decrementLikeCount(postId);
+    }
+
     /** 원본 게시글 조회 (repost/quote의 원본) */
     @Transactional(readOnly = true)
     public Optional<Post> findOriginalPost(Post post) {

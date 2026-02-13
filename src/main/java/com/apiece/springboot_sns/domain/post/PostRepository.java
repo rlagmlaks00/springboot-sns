@@ -36,19 +36,27 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     Optional<Post> findByUserAndQuoteId(User user, Long quoteId);
 
-    @Modifying(clearAutomatically = true)
+    @Modifying
     @Query("UPDATE Post p SET p.replyCount = p.replyCount + 1 WHERE p.id = :id")
     void incrementReplyCount(@Param("id") Long id);
 
-    @Modifying(clearAutomatically = true)
+    @Modifying
     @Query("UPDATE Post p SET p.repostCount = p.repostCount + 1 WHERE p.id = :id")
     void incrementRepostCount(@Param("id") Long id);
 
-    @Modifying(clearAutomatically = true)
+    @Modifying
     @Query("UPDATE Post p SET p.repostCount = p.repostCount - 1 WHERE p.id = :id AND p.repostCount > 0")
     void decrementRepostCount(@Param("id") Long id);
 
-    @Modifying(clearAutomatically = true)
+    @Modifying
     @Query("UPDATE Post p SET p.replyCount = p.replyCount - 1 WHERE p.id = :id AND p.replyCount > 0")
     void decrementReplyCount(@Param("id") Long id);
+
+    @Modifying
+    @Query("UPDATE Post p SET p.likeCount = p.likeCount + 1 WHERE p.id = :id")
+    void incrementLikeCount(@Param("id") Long id);
+
+    @Modifying
+    @Query("UPDATE Post p SET p.likeCount = p.likeCount - 1 WHERE p.id = :id AND p.likeCount > 0")
+    void decrementLikeCount(@Param("id") Long id);
 }
