@@ -29,6 +29,7 @@ spring:
       mode: always
 post:
   edit-window: 1h
+  view-sync-interval: 60000
 logging:
   level:
     io.lettuce.core: INFO

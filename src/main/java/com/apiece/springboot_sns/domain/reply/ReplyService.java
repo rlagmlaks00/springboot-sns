@@ -21,9 +21,9 @@ public class ReplyService {
     /** 댓글 생성 */
     @Transactional
     public Post createReply(String content, User user, Long parentId) {
-        Post parent = postService.getById(parentId);
-        Post reply = postRepository.save(Post.createReply(content, user, parent.getId()));
-        postRepository.incrementReplyCount(parent.getId());
+        postService.validateExists(parentId);
+        Post reply = postRepository.save(Post.createReply(content, user, parentId));
+        postRepository.incrementReplyCount(parentId);
         return reply;
     }
 
