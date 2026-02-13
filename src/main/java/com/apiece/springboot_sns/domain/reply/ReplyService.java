@@ -1,5 +1,6 @@
 package com.apiece.springboot_sns.domain.reply;
 
+import com.apiece.springboot_sns.domain.common.DomainErrorCode;
 import com.apiece.springboot_sns.domain.post.Post;
 import com.apiece.springboot_sns.domain.post.PostRepository;
 import com.apiece.springboot_sns.domain.post.PostService;
@@ -24,6 +25,18 @@ public class ReplyService {
         Post reply = postRepository.save(Post.createReply(content, user, parent.getId()));
         postRepository.incrementReplyCount(parent.getId());
         return reply;
+    }
+
+    /** 댓글 삭제 */
+    @Transactional
+    public void deleteReply(User user, Long replyId) {
+        Post reply = postRepository.findByIdWithUser(replyId)
+                .orElseThrow(() -> new ReplyException("댓글을 찾을 수 없습니다.", DomainErrorCode.NOT_FOUND));
+        if (!reply.getUser().getId().equals(user.getId())) {
+            throw new ReplyException("댓글 삭제 권한이 없습니다.", DomainErrorCode.FORBIDDEN);
+        }
+        postRepository.delete(reply);
+        postRepository.decrementReplyCount(reply.getParentId());
     }
 
     /** 댓글 목록 조회 */

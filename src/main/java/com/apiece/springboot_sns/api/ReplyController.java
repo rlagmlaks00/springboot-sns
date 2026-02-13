@@ -14,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,6 +33,13 @@ public class ReplyController {
             @AuthUser User user, @Valid @RequestBody ReplyCreateRequest request) {
         Post post = replyService.createReply(request.content(), user, request.parentId());
         return ResponseEntity.status(HttpStatus.CREATED).body(PostResponse.from(post));
+    }
+
+    /** 댓글 삭제 */
+    @DeleteMapping("/api/v1/replies/{replyId}")
+    public ResponseEntity<Void> deleteReply(@AuthUser User user, @PathVariable Long replyId) {
+        replyService.deleteReply(user, replyId);
+        return ResponseEntity.noContent().build();
     }
 
     /** 댓글 목록 조회 */
