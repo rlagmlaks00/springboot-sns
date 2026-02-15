@@ -29,6 +29,13 @@ spring:
       mode: always
 post:
   edit-window: 1h
+rustfs:
+  endpoint: http://localhost:9000
+  console-port: 9001
+  access-key: rustfsadmin
+  secret-key: rustfsadmin
+  bucket: media
+  region: ap-northeast-2
   view-sync-interval: 60000
 logging:
   level:
