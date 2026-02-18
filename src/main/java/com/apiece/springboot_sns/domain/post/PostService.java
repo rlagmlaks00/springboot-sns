@@ -62,6 +62,23 @@ public class PostService {
         return postRepository.findByUserWithUser(user, pageable);
     }
 
+    /** 좋아요 수 증가 */
+    public void incrementLikeCount(Long postId) {
+        postRepository.incrementLikeCount(postId);
+    }
+
+    /** 좋아요 수 감소 */
+    public void decrementLikeCount(Long postId) {
+        postRepository.decrementLikeCount(postId);
+    }
+
+    /** 게시글 존재 확인 */
+    public void validateExists(Long postId) {
+        if (!postRepository.existsById(postId)) {
+            throw new PostException("게시글을 찾을 수 없습니다.", DomainErrorCode.NOT_FOUND);
+        }
+    }
+
     /** 원본 게시글 조회 (repost/quote의 원본) */
     @Transactional(readOnly = true)
     public Optional<Post> findOriginalPost(Post post) {

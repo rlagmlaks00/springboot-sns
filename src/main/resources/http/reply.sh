@@ -60,16 +60,34 @@ curl -s -X GET "$BASE_URL/api/v1/posts/$PARENT_ID/replies?page=0&size=10" \
   -b "$COOKIES"
 echo -e "\n"
 
-# 8. Reply to non-existent post (should return 404)
-echo "=== 8. Reply to non-existent post (should return 404) ==="
+# 8. Delete Reply
+echo "=== 8. Delete Reply ($REPLY_ID) ==="
+curl -s -w "\nHTTP Status: %{http_code}\n" -X DELETE "$BASE_URL/api/v1/replies/$REPLY_ID" \
+  -b "$COOKIES"
+echo -e "\n"
+
+# 9. Get Parent Post - check replyCount decreased
+echo "=== 9. Get Parent Post - check replyCount decreased ($PARENT_ID) ==="
+curl -s -X GET "$BASE_URL/api/v1/posts/$PARENT_ID" \
+  -b "$COOKIES"
+echo -e "\n"
+
+# 10. Delete non-existent reply (should return 404)
+echo "=== 10. Delete non-existent reply (should return 404) ==="
+curl -s -w "\nHTTP Status: %{http_code}\n" -X DELETE "$BASE_URL/api/v1/replies/999999" \
+  -b "$COOKIES"
+echo -e "\n"
+
+# 11. Reply to non-existent post (should return 404)
+echo "=== 11. Reply to non-existent post (should return 404) ==="
 curl -s -w "\nHTTP Status: %{http_code}\n" -X POST "$BASE_URL/api/v1/replies" \
   -H "Content-Type: application/json" \
   -b "$COOKIES" \
   -d '{"content":"Reply to nothing","parentId":999999}'
 echo -e "\n"
 
-# 9. Reply with negative parentId (should return 400 validation error)
-echo "=== 9. Reply with negative parentId (should return 400) ==="
+# 12. Reply with negative parentId (should return 400 validation error)
+echo "=== 12. Reply with negative parentId (should return 400) ==="
 curl -s -w "\nHTTP Status: %{http_code}\n" -X POST "$BASE_URL/api/v1/replies" \
   -H "Content-Type: application/json" \
   -b "$COOKIES" \

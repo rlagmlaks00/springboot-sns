@@ -19,7 +19,7 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
 
     Page<Follow> findByFollower(User follower, Pageable pageable);
 
-    @Modifying(clearAutomatically = true)
+    @Modifying
     @Query("UPDATE Follow f SET f.deletedAt = CURRENT_TIMESTAMP WHERE f.id = :id")
     void softDelete(@Param("id") Long id);
 }

@@ -1,4 +1,4 @@
-package com.apiece.springboot_sns.api;
+package com.apiece.springboot_sns.exception;
 
 import com.apiece.springboot_sns.api.dto.common.ErrorResponse;
 import com.apiece.springboot_sns.domain.common.DomainErrorCode;
