@@ -25,29 +25,29 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ReplyController {
 
-    private final ReplyService replyService;
+  private final ReplyService replyService;
 
-    /** 댓글 생성 */
-    @PostMapping("/api/v1/replies")
-    public ResponseEntity<PostResponse> createReply(
-            @AuthUser User user, @Valid @RequestBody ReplyCreateRequest request) {
-        Post post = replyService.createReply(request.content(), user, request.parentId());
-        return ResponseEntity.status(HttpStatus.CREATED).body(PostResponse.from(post));
-    }
+  /** 댓글 생성 */
+  @PostMapping("/api/v1/replies")
+  public ResponseEntity<PostResponse> createReply(
+      @AuthUser User user, @Valid @RequestBody ReplyCreateRequest request) {
+    Post post = replyService.createReply(request.content(), user, request.parentId());
+    return ResponseEntity.status(HttpStatus.CREATED).body(PostResponse.from(post));
+  }
 
-    /** 댓글 삭제 */
-    @DeleteMapping("/api/v1/replies/{replyId}")
-    public ResponseEntity<Void> deleteReply(@AuthUser User user, @PathVariable Long replyId) {
-        replyService.deleteReply(user, replyId);
-        return ResponseEntity.noContent().build();
-    }
+  /** 댓글 삭제 */
+  @DeleteMapping("/api/v1/replies/{replyId}")
+  public ResponseEntity<Void> deleteReply(@AuthUser User user, @PathVariable Long replyId) {
+    replyService.deleteReply(user, replyId);
+    return ResponseEntity.noContent().build();
+  }
 
-    /** 댓글 목록 조회 */
-    @GetMapping("/api/v1/posts/{postId}/replies")
-    public ResponseEntity<Page<PostResponse>> getReplies(
-            @PathVariable Long postId,
-            @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<PostResponse> replies = replyService.getReplies(postId, pageable).map(PostResponse::from);
-        return ResponseEntity.ok(replies);
-    }
+  /** 댓글 목록 조회 */
+  @GetMapping("/api/v1/posts/{postId}/replies")
+  public ResponseEntity<Page<PostResponse>> getReplies(
+      @PathVariable Long postId,
+      @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+    Page<PostResponse> replies = replyService.getReplies(postId, pageable).map(PostResponse::from);
+    return ResponseEntity.ok(replies);
+  }
 }

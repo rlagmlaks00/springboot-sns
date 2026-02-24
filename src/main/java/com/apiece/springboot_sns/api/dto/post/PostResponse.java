@@ -5,70 +5,70 @@ import com.apiece.springboot_sns.domain.post.PostType;
 import java.time.LocalDateTime;
 
 public record PostResponse(
-        Long id,
+    Long id,
 
-        String content,
+    String content,
 
-        String username,
+    String username,
 
-        PostType type,
+    PostType type,
 
-        Long parentId,
+    Long parentId,
 
-        Long quoteId,
+    Long quoteId,
 
-        Long repostId,
+    Long repostId,
 
-        Integer repostCount,
+    Integer repostCount,
 
-        Integer likeCount,
+    Integer likeCount,
 
-        Integer replyCount,
+    Integer replyCount,
 
-        Long viewCount,
+    Long viewCount,
 
-        OriginalPostResponse originalPost,
+    OriginalPostResponse originalPost,
 
-        LocalDateTime createdAt,
+    LocalDateTime createdAt,
 
-        LocalDateTime updatedAt
+    LocalDateTime updatedAt
 ) {
 
-    public static PostResponse from(Post post) {
-        return new PostResponse(
-                post.getId(),
-                post.getContent(),
-                post.getUser().getUsername(),
-                post.getType(),
-                post.getParentId(),
-                post.getQuoteId(),
-                post.getRepostId(),
-                post.getRepostCount(),
-                post.getLikeCount(),
-                post.getReplyCount(),
-                post.getViewCount(),
-                null,
-                post.getCreatedAt(),
-                post.getUpdatedAt()
-        );
-    }
+  public static PostResponse from(Post post) {
+    return new PostResponse(
+        post.getId(),
+        post.getContent(),
+        post.getUser().getUsername(),
+        post.getType(),
+        post.getParentId(),
+        post.getQuoteId(),
+        post.getRepostId(),
+        post.getRepostCount(),
+        post.getLikeCount(),
+        post.getReplyCount(),
+        post.getViewCount(),
+        null,
+        post.getCreatedAt(),
+        post.getUpdatedAt()
+    );
+  }
 
-    public static PostResponse from(Post post, Post original) {
-        return new PostResponse(
-                post.getId(),
-                post.getContent(),
-                post.getUser().getUsername(),
-                post.getType(),
-                post.getParentId(),
-                post.getQuoteId(),
-                post.getRepostId(),
-                post.getRepostCount(),
-                post.getLikeCount(),
-                post.getReplyCount(),
-                post.getViewCount(),
-                original != null ? OriginalPostResponse.from(original) : null,
-                post.getCreatedAt(),
-                post.getUpdatedAt()
-        );
-    }
+  public static PostResponse from(Post post, Post original) {
+    return new PostResponse(
+        post.getId(),
+        post.getContent(),
+        post.getUser().getUsername(),
+        post.getType(),
+        post.getParentId(),
+        post.getQuoteId(),
+        post.getRepostId(),
+        post.getRepostCount(),
+        post.getLikeCount(),
+        post.getReplyCount(),
+        post.getViewCount(),
+        original != null ? OriginalPostResponse.from(original) : null,
+        post.getCreatedAt(),
+        post.getUpdatedAt()
+    );
+  }
 }

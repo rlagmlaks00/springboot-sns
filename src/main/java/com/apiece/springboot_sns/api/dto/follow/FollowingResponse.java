@@ -5,22 +5,22 @@ import com.apiece.springboot_sns.domain.user.User;
 import java.time.LocalDateTime;
 
 public record FollowingResponse(
-        Long id,
+    Long id,
 
-        String email,
+    String email,
 
-        String username,
+    String username,
 
-        LocalDateTime followedAt
+    LocalDateTime followedAt
 ) {
 
-    public static FollowingResponse from(Follow follow) {
-        User following = follow.getFollowing();
-        return new FollowingResponse(
-                following.getId(),
-                following.getEmail(),
-                following.getUsername(),
-                follow.getCreatedAt()
-        );
-    }
+  public static FollowingResponse from(Follow follow) {
+    User following = follow.getFollowing();
+    return new FollowingResponse(
+        following.getId(),
+        following.getEmail(),
+        following.getUsername(),
+        follow.getCreatedAt()
+    );
+  }
 }

@@ -14,23 +14,23 @@ import org.springframework.session.web.http.DefaultCookieSerializer;
 @EnableRedisIndexedHttpSession(maxInactiveIntervalInSeconds = 1800)
 public class RedisSessionConfig {
 
-    @Bean
-    public CookieSerializer cookieSerializer() {
-        DefaultCookieSerializer serializer = new DefaultCookieSerializer();
-        serializer.setCookieName("SESSION");
-        serializer.setCookiePath("/");
-        serializer.setUseHttpOnlyCookie(true);
-        return serializer;
-    }
+  @Bean
+  public CookieSerializer cookieSerializer() {
+    DefaultCookieSerializer serializer = new DefaultCookieSerializer();
+    serializer.setCookieName("SESSION");
+    serializer.setCookiePath("/");
+    serializer.setUseHttpOnlyCookie(true);
+    return serializer;
+  }
 
-    @Bean
-    public <S extends Session> SpringSessionBackedSessionRegistry<S> sessionRegistry(
-            FindByIndexNameSessionRepository<S> sessionRepository) {
-        return new SpringSessionBackedSessionRegistry<>(sessionRepository);
-    }
+  @Bean
+  public <S extends Session> SpringSessionBackedSessionRegistry<S> sessionRegistry(
+      FindByIndexNameSessionRepository<S> sessionRepository) {
+    return new SpringSessionBackedSessionRegistry<>(sessionRepository);
+  }
 
-    @Bean
-    public HttpSessionEventPublisher httpSessionEventPublisher() {
-        return new HttpSessionEventPublisher();
-    }
+  @Bean
+  public HttpSessionEventPublisher httpSessionEventPublisher() {
+    return new HttpSessionEventPublisher();
+  }
 }

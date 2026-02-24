@@ -5,5 +5,5 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "post")
 public record PostProperties(
-        Duration editWindow
+    Duration editWindow
 ) {}

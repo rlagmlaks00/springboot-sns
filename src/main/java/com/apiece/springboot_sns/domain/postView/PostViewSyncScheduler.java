@@ -12,22 +12,22 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class PostViewSyncScheduler {
 
-    private final PostViewRepository postViewRepository;
-    private final PostViewService postViewService;
+  private final PostViewRepository postViewRepository;
+  private final PostViewService postViewService;
 
-    @Scheduled(fixedRateString = "${post.view-sync-interval}")
-    public void syncViewCountsToDb() {
-        Set<String> dirtyPostIds = postViewRepository.getDirtyPostIds();
-        if (dirtyPostIds == null || dirtyPostIds.isEmpty()) {
-            return;
-        }
-
-        for (String postIdStr : dirtyPostIds) {
-            try {
-                postViewService.syncSinglePost(postIdStr);
-            } catch (Exception e) {
-                log.error("Failed to sync view count for postId={}", postIdStr, e);
-            }
-        }
+  @Scheduled(fixedRateString = "${rustfs.view-sync-interval}")
+  public void syncViewCountsToDb() {
+    Set<String> dirtyPostIds = postViewRepository.getDirtyPostIds();
+    if (dirtyPostIds == null || dirtyPostIds.isEmpty()) {
+      return;
     }
+
+    for (String postIdStr : dirtyPostIds) {
+      try {
+        postViewService.syncSinglePost(postIdStr);
+      } catch (Exception e) {
+        log.error("Failed to sync view count for postId={}", postIdStr, e);
+      }
+    }
+  }
 }

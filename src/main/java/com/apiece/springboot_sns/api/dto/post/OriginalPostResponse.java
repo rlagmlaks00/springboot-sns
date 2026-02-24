@@ -4,33 +4,33 @@ import com.apiece.springboot_sns.domain.post.Post;
 import java.time.LocalDateTime;
 
 public record OriginalPostResponse(
-        Long id,
+    Long id,
 
-        String content,
+    String content,
 
-        String username,
+    String username,
 
-        Integer repostCount,
+    Integer repostCount,
 
-        Integer likeCount,
+    Integer likeCount,
 
-        Integer replyCount,
+    Integer replyCount,
 
-        Long viewCount,
+    Long viewCount,
 
-        LocalDateTime createdAt
+    LocalDateTime createdAt
 ) {
 
-    public static OriginalPostResponse from(Post post) {
-        return new OriginalPostResponse(
-                post.getId(),
-                post.getContent(),
-                post.getUser().getUsername(),
-                post.getRepostCount(),
-                post.getLikeCount(),
-                post.getReplyCount(),
-                post.getViewCount(),
-                post.getCreatedAt()
-        );
-    }
+  public static OriginalPostResponse from(Post post) {
+    return new OriginalPostResponse(
+        post.getId(),
+        post.getContent(),
+        post.getUser().getUsername(),
+        post.getRepostCount(),
+        post.getLikeCount(),
+        post.getReplyCount(),
+        post.getViewCount(),
+        post.getCreatedAt()
+    );
+  }
 }

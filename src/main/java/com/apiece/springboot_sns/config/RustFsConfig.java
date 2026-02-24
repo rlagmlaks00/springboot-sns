@@ -16,32 +16,32 @@ import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 @RequiredArgsConstructor
 public class RustFsConfig {
 
-    private final RustFsProperties properties;
+  private final RustFsProperties properties;
 
-    @Bean
-    public S3Client s3Client() {
-        return S3Client.builder()
-                .endpointOverride(URI.create(properties.endpoint()))
-                .credentialsProvider(credentialsProvider())
-                .region(Region.of(properties.region()))
-                .serviceConfiguration(
-                        S3Configuration.builder().pathStyleAccessEnabled(true).build())
-                .build();
-    }
+  @Bean
+  public S3Client s3Client() {
+    return S3Client.builder()
+        .endpointOverride(URI.create(properties.endpoint()))
+        .credentialsProvider(credentialsProvider())
+        .region(Region.of(properties.region()))
+        .serviceConfiguration(
+            S3Configuration.builder().pathStyleAccessEnabled(true).build())
+        .build();
+  }
 
-    @Bean
-    public S3Presigner s3Presigner() {
-        return S3Presigner.builder()
-                .endpointOverride(URI.create(properties.endpoint()))
-                .credentialsProvider(credentialsProvider())
-                .region(Region.of(properties.region()))
-                .serviceConfiguration(
-                        S3Configuration.builder().pathStyleAccessEnabled(true).build())
-                .build();
-    }
+  @Bean
+  public S3Presigner s3Presigner() {
+    return S3Presigner.builder()
+        .endpointOverride(URI.create(properties.endpoint()))
+        .credentialsProvider(credentialsProvider())
+        .region(Region.of(properties.region()))
+        .serviceConfiguration(
+            S3Configuration.builder().pathStyleAccessEnabled(true).build())
+        .build();
+  }
 
-    private StaticCredentialsProvider credentialsProvider() {
-        return StaticCredentialsProvider.create(
-                AwsBasicCredentials.create(properties.accessKey(), properties.secretKey()));
-    }
+  private StaticCredentialsProvider credentialsProvider() {
+    return StaticCredentialsProvider.create(
+        AwsBasicCredentials.create(properties.accessKey(), properties.secretKey()));
+  }
 }

@@ -9,21 +9,21 @@ import org.springframework.data.repository.query.Param;
 
 public interface FollowCountRepository extends JpaRepository<FollowCount, Long> {
 
-    Optional<FollowCount> findByUser(User user);
+  Optional<FollowCount> findByUser(User user);
 
-    @Modifying
-    @Query("UPDATE FollowCount fc SET fc.followingCount = fc.followingCount + 1 WHERE fc.user = :user")
-    void incrementFollowingCount(@Param("user") User user);
+  @Modifying
+  @Query("UPDATE FollowCount fc SET fc.followingCount = fc.followingCount + 1 WHERE fc.user = :user")
+  void incrementFollowingCount(@Param("user") User user);
 
-    @Modifying
-    @Query("UPDATE FollowCount fc SET fc.followingCount = fc.followingCount - 1 WHERE fc.user = :user")
-    void decrementFollowingCount(@Param("user") User user);
+  @Modifying
+  @Query("UPDATE FollowCount fc SET fc.followingCount = fc.followingCount - 1 WHERE fc.user = :user")
+  void decrementFollowingCount(@Param("user") User user);
 
-    @Modifying
-    @Query("UPDATE FollowCount fc SET fc.followerCount = fc.followerCount + 1 WHERE fc.user = :user")
-    void incrementFollowerCount(@Param("user") User user);
+  @Modifying
+  @Query("UPDATE FollowCount fc SET fc.followerCount = fc.followerCount + 1 WHERE fc.user = :user")
+  void incrementFollowerCount(@Param("user") User user);
 
-    @Modifying
-    @Query("UPDATE FollowCount fc SET fc.followerCount = fc.followerCount - 1 WHERE fc.user = :user")
-    void decrementFollowerCount(@Param("user") User user);
+  @Modifying
+  @Query("UPDATE FollowCount fc SET fc.followerCount = fc.followerCount - 1 WHERE fc.user = :user")
+  void decrementFollowerCount(@Param("user") User user);
 }

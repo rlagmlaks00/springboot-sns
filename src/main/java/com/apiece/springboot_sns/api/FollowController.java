@@ -23,46 +23,46 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class FollowController {
 
-    private final FollowService followService;
-    private final UserService userService;
+  private final FollowService followService;
+  private final UserService userService;
 
-    /** 팔로우 */
-    @PostMapping("/api/v1/follow/{username}")
-    public ResponseEntity<Map<String, String>> follow(
-            @AuthUser User follower, @PathVariable String username) {
-        User following = userService.getByUsername(username);
-        followService.follow(follower, following);
-        return ResponseEntity.ok(Map.of("message", "팔로우 성공"));
-    }
+  /** 팔로우 */
+  @PostMapping("/api/v1/follow/{username}")
+  public ResponseEntity<Map<String, String>> follow(
+      @AuthUser User follower, @PathVariable String username) {
+    User following = userService.getByUsername(username);
+    followService.follow(follower, following);
+    return ResponseEntity.ok(Map.of("message", "팔로우 성공"));
+  }
 
-    /** 언팔로우 */
-    @DeleteMapping("/api/v1/follow/{username}")
-    public ResponseEntity<Map<String, String>> unfollow(
-            @AuthUser User follower, @PathVariable String username) {
-        User following = userService.getByUsername(username);
-        followService.unfollow(follower, following);
-        return ResponseEntity.ok(Map.of("message", "언팔로우 성공"));
-    }
+  /** 언팔로우 */
+  @DeleteMapping("/api/v1/follow/{username}")
+  public ResponseEntity<Map<String, String>> unfollow(
+      @AuthUser User follower, @PathVariable String username) {
+    User following = userService.getByUsername(username);
+    followService.unfollow(follower, following);
+    return ResponseEntity.ok(Map.of("message", "언팔로우 성공"));
+  }
 
-    /** 팔로워 목록 조회 */
-    @GetMapping("/api/v1/follow/followers/{username}")
-    public ResponseEntity<Page<FollowerResponse>> getFollowers(
-            @PathVariable String username,
-            @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        User user = userService.getByUsername(username);
-        Page<FollowerResponse> followers =
-                followService.getFollowers(user, pageable).map(FollowerResponse::from);
-        return ResponseEntity.ok(followers);
-    }
+  /** 팔로워 목록 조회 */
+  @GetMapping("/api/v1/follow/followers/{username}")
+  public ResponseEntity<Page<FollowerResponse>> getFollowers(
+      @PathVariable String username,
+      @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+    User user = userService.getByUsername(username);
+    Page<FollowerResponse> followers =
+        followService.getFollowers(user, pageable).map(FollowerResponse::from);
+    return ResponseEntity.ok(followers);
+  }
 
-    /** 팔로잉 목록 조회 */
-    @GetMapping("/api/v1/follow/followings/{username}")
-    public ResponseEntity<Page<FollowingResponse>> getFollowings(
-            @PathVariable String username,
-            @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        User user = userService.getByUsername(username);
-        Page<FollowingResponse> followings =
-                followService.getFollowings(user, pageable).map(FollowingResponse::from);
-        return ResponseEntity.ok(followings);
-    }
+  /** 팔로잉 목록 조회 */
+  @GetMapping("/api/v1/follow/followings/{username}")
+  public ResponseEntity<Page<FollowingResponse>> getFollowings(
+      @PathVariable String username,
+      @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+    User user = userService.getByUsername(username);
+    Page<FollowingResponse> followings =
+        followService.getFollowings(user, pageable).map(FollowingResponse::from);
+    return ResponseEntity.ok(followings);
+  }
 }

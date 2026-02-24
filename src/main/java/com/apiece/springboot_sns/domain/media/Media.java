@@ -21,52 +21,52 @@ import java.util.Map;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Media extends BaseTimeEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private MediaType mediaType;
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private MediaType mediaType;
 
-    @Column(nullable = false)
-    private String path;
+  @Column(nullable = false)
+  private String path;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private MediaStatus status;
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private MediaStatus status;
 
-    @Column(nullable = false)
-    private Long userId;
+  @Column(nullable = false)
+  private Long userId;
 
-    private String uploadId;
+  private String uploadId;
 
-    @JdbcTypeCode(SqlTypes.JSON)
-    @Column(columnDefinition = "jsonb")
-    private Map<String, Object> attributes = new HashMap<>();
+  @JdbcTypeCode(SqlTypes.JSON)
+  @Column(columnDefinition = "jsonb")
+  private Map<String, Object> attributes = new HashMap<>();
 
-    public static Media create(MediaType mediaType, String path, Long userId) {
-        Media media = new Media();
-        media.mediaType = mediaType;
-        media.path = path;
-        media.status = MediaStatus.INIT;
-        media.userId = userId;
-        return media;
-    }
+  public static Media create(MediaType mediaType, String path, Long userId) {
+    Media media = new Media();
+    media.mediaType = mediaType;
+    media.path = path;
+    media.status = MediaStatus.INIT;
+    media.userId = userId;
+    return media;
+  }
 
-    public void markUploaded() {
-        this.status = MediaStatus.UPLOADED;
-    }
+  public void markUploaded() {
+    this.status = MediaStatus.UPLOADED;
+  }
 
-    public void markCompleted() {
-        this.status = MediaStatus.COMPLETED;
-    }
+  public void markCompleted() {
+    this.status = MediaStatus.COMPLETED;
+  }
 
-    public void markFailed() {
-        this.status = MediaStatus.FAILED;
-    }
+  public void markFailed() {
+    this.status = MediaStatus.FAILED;
+  }
 
-    public void assignUploadId(String uploadId) {
-        this.uploadId = uploadId;
-    }
+  public void assignUploadId(String uploadId) {
+    this.uploadId = uploadId;
+  }
 }

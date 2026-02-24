@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -e
 
 BASE_URL="http://localhost:8080"
 COOKIES="cookies.txt"

@@ -22,31 +22,31 @@ import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @Table(
-        name = "follow_counts",
-        uniqueConstraints = @UniqueConstraint(columnNames = "user_id"))
+    name = "follow_counts",
+    uniqueConstraints = @UniqueConstraint(columnNames = "user_id"))
 @SQLDelete(sql = "UPDATE follow_counts SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
 @SQLRestriction("deleted_at IS NULL")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FollowCount extends BaseTimeEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-            name = "user_id",
-            foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private User user;
+  @OneToOne(fetch = FetchType.LAZY)
+  @JoinColumn(
+      name = "user_id",
+      foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+  private User user;
 
-    @Column(nullable = false)
-    private int followerCount = 0;
+  @Column(nullable = false)
+  private int followerCount = 0;
 
-    @Column(nullable = false)
-    private int followingCount = 0;
+  @Column(nullable = false)
+  private int followingCount = 0;
 
-    public FollowCount(User user) {
-        this.user = user;
-    }
+  public FollowCount(User user) {
+    this.user = user;
+  }
 }

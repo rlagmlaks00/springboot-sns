@@ -12,40 +12,40 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class FollowService {
 
-    private final FollowRepository followRepository;
-    private final FollowCountService followCountService;
+  private final FollowRepository followRepository;
+  private final FollowCountService followCountService;
 
-    /** 팔로우 */
-    @Transactional
-    public void follow(User follower, User following) {
-        if (follower.getId().equals(following.getId())) {
-            throw new FollowException("자기 자신을 팔로우할 수 없습니다.", DomainErrorCode.BAD_REQUEST);
-        }
-        if (followRepository.existsByFollowerAndFollowing(follower, following)) {
-            throw new FollowException("이미 팔로우 중입니다.", DomainErrorCode.CONFLICT);
-        }
-        followRepository.save(new Follow(follower, following));
-        followCountService.incrementCounts(follower, following);
+  /** 팔로우 */
+  @Transactional
+  public void follow(User follower, User following) {
+    if (follower.getId().equals(following.getId())) {
+      throw new FollowException("자기 자신을 팔로우할 수 없습니다.", DomainErrorCode.BAD_REQUEST);
     }
+    if (followRepository.existsByFollowerAndFollowing(follower, following)) {
+      throw new FollowException("이미 팔로우 중입니다.", DomainErrorCode.CONFLICT);
+    }
+    followRepository.save(new Follow(follower, following));
+    followCountService.incrementCounts(follower, following);
+  }
 
-    /** 언팔로우 */
-    @Transactional
-    public void unfollow(User follower, User following) {
-        Follow follow =
-                followRepository
-                        .findByFollowerAndFollowing(follower, following)
-                        .orElseThrow(() -> new FollowException("팔로우 관계가 존재하지 않습니다.", DomainErrorCode.NOT_FOUND));
-        followRepository.softDelete(follow.getId());
-        followCountService.decrementCounts(follower, following);
-    }
+  /** 언팔로우 */
+  @Transactional
+  public void unfollow(User follower, User following) {
+    Follow follow =
+        followRepository
+            .findByFollowerAndFollowing(follower, following)
+            .orElseThrow(() -> new FollowException("팔로우 관계가 존재하지 않습니다.", DomainErrorCode.NOT_FOUND));
+    followRepository.softDelete(follow.getId());
+    followCountService.decrementCounts(follower, following);
+  }
 
-    /** 팔로워 목록 조회 */
-    public Page<Follow> getFollowers(User user, Pageable pageable) {
-        return followRepository.findByFollowing(user, pageable);
-    }
+  /** 팔로워 목록 조회 */
+  public Page<Follow> getFollowers(User user, Pageable pageable) {
+    return followRepository.findByFollowing(user, pageable);
+  }
 
-    /** 팔로잉 목록 조회 */
-    public Page<Follow> getFollowings(User user, Pageable pageable) {
-        return followRepository.findByFollower(user, pageable);
-    }
+  /** 팔로잉 목록 조회 */
+  public Page<Follow> getFollowings(User user, Pageable pageable) {
+    return followRepository.findByFollower(user, pageable);
+  }
 }

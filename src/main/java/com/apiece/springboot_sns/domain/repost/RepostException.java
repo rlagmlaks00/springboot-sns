@@ -5,7 +5,7 @@ import com.apiece.springboot_sns.domain.common.DomainException;
 
 public class RepostException extends DomainException {
 
-    public RepostException(String message, DomainErrorCode errorCode) {
-        super(message, errorCode);
-    }
+  public RepostException(String message, DomainErrorCode errorCode) {
+    super(message, errorCode);
+  }
 }

@@ -19,20 +19,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class RepostController {
 
-    private final RepostService repostService;
+  private final RepostService repostService;
 
-    /** 리포스트 생성 */
-    @PostMapping("/api/v1/reposts")
-    public ResponseEntity<PostResponse> createRepost(
-            @AuthUser User user, @Valid @RequestBody RepostCreateRequest request) {
-        RepostService.RepostResult result = repostService.createRepost(user, request.repostId());
-        return ResponseEntity.status(HttpStatus.CREATED).body(PostResponse.from(result.repost(), result.original()));
-    }
+  /** 리포스트 생성 */
+  @PostMapping("/api/v1/reposts")
+  public ResponseEntity<PostResponse> createRepost(
+      @AuthUser User user, @Valid @RequestBody RepostCreateRequest request) {
+    RepostService.RepostResult result = repostService.createRepost(user, request.repostId());
+    return ResponseEntity.status(HttpStatus.CREATED).body(PostResponse.from(result.repost(), result.original()));
+  }
 
-    /** 리포스트 삭제 */
-    @DeleteMapping("/api/v1/reposts/{repostId}")
-    public ResponseEntity<Void> deleteRepost(@AuthUser User user, @PathVariable Long repostId) {
-        repostService.deleteRepost(user, repostId);
-        return ResponseEntity.noContent().build();
-    }
+  /** 리포스트 삭제 */
+  @DeleteMapping("/api/v1/reposts/{repostId}")
+  public ResponseEntity<Void> deleteRepost(@AuthUser User user, @PathVariable Long repostId) {
+    repostService.deleteRepost(user, repostId);
+    return ResponseEntity.noContent().build();
+  }
 }

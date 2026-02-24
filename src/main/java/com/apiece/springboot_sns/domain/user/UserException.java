@@ -5,7 +5,7 @@ import com.apiece.springboot_sns.domain.common.DomainException;
 
 public class UserException extends DomainException {
 
-    public UserException(String message, DomainErrorCode errorCode) {
-        super(message, errorCode);
-    }
+  public UserException(String message, DomainErrorCode errorCode) {
+    super(message, errorCode);
+  }
 }

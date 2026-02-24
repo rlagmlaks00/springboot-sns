@@ -26,24 +26,24 @@ import org.hibernate.annotations.SQLRestriction;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Follow extends BaseTimeEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-            name = "follower_id",
-            foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private User follower;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(
+      name = "follower_id",
+      foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+  private User follower;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-            name = "following_id",
-            foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private User following;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(
+      name = "following_id",
+      foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+  private User following;
 
-    public Follow(User follower, User following) {
-        this.follower = follower;
-        this.following = following;
-    }
+  public Follow(User follower, User following) {
+    this.follower = follower;
+    this.following = following;
+  }
 }

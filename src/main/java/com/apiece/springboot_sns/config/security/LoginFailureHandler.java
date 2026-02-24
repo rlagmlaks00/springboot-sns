@@ -12,18 +12,18 @@ import org.springframework.stereotype.Component;
 @Component
 public class LoginFailureHandler implements AuthenticationFailureHandler {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+  private final ObjectMapper objectMapper = new ObjectMapper();
 
-    @Override
-    public void onAuthenticationFailure(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            AuthenticationException exception)
-            throws IOException {
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
+  @Override
+  public void onAuthenticationFailure(
+      HttpServletRequest request,
+      HttpServletResponse response,
+      AuthenticationException exception)
+      throws IOException {
+    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+    response.setContentType("application/json");
+    response.setCharacterEncoding("UTF-8");
 
-        objectMapper.writeValue(response.getWriter(), Map.of("error", "Invalid email or password"));
-    }
+    objectMapper.writeValue(response.getWriter(), Map.of("error", "Invalid email or password"));
+  }
 }

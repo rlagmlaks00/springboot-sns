@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class PostViewController {
 
-    private final PostService postService;
-    private final PostViewService postViewService;
+  private final PostService postService;
+  private final PostViewService postViewService;
 
-    @PostMapping("/api/v1/posts/{postId}/view")
-    public ResponseEntity<Void> view(@PathVariable Long postId) {
-        postService.validateExists(postId);
-        postViewService.incrementViewCount(postId);
-        return ResponseEntity.ok().build();
-    }
+  @PostMapping("/api/v1/posts/{postId}/view")
+  public ResponseEntity<Void> view(@PathVariable Long postId) {
+    postService.validateExists(postId);
+    postViewService.incrementViewCount(postId);
+    return ResponseEntity.ok().build();
+  }
 }

@@ -17,26 +17,26 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
-    private final UserService userService;
-    private final ObjectMapper objectMapper;
+  private final UserService userService;
+  private final ObjectMapper objectMapper;
 
-    @Override
-    public void onAuthenticationSuccess(
-            HttpServletRequest request, HttpServletResponse response, Authentication authentication)
-            throws IOException {
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        User user = userService.getByUsername(userDetails.getUsername());
+  @Override
+  public void onAuthenticationSuccess(
+      HttpServletRequest request, HttpServletResponse response, Authentication authentication)
+      throws IOException {
+    UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+    User user = userService.getByUsername(userDetails.getUsername());
 
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
+    response.setStatus(HttpServletResponse.SC_OK);
+    response.setContentType("application/json");
+    response.setCharacterEncoding("UTF-8");
 
-        Map<String, Object> body =
-                Map.of(
-                        "id", user.getId(),
-                        "email", user.getEmail(),
-                        "username", user.getUsername());
+    Map<String, Object> body =
+        Map.of(
+            "id", user.getId(),
+            "email", user.getEmail(),
+            "username", user.getUsername());
 
-        objectMapper.writeValue(response.getWriter(), body);
-    }
+    objectMapper.writeValue(response.getWriter(), body);
+  }
 }

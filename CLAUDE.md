@@ -14,6 +14,10 @@ As the AI Agent, you **must not** perform any actions or make any changes to the
 
 ## Code Style
 
+### Indentation
+- Tab size: 2 spaces
+- Continuation indent: 4 spaces
+
 ### Record/DTO Formatting
 - Each validation annotation on a separate line
 - Blank line between fields
@@ -21,11 +25,11 @@ As the AI Agent, you **must not** perform any actions or make any changes to the
 
 ```java
 public record ExampleRequest(
-        @NotBlank(message = "Field is required")
-        @Size(min = 2, max = 50, message = "Field must be between 2 and 50 characters")
-        String field1,
+    @NotBlank(message = "Field is required")
+    @Size(min = 2, max = 50, message = "Field must be between 2 and 50 characters")
+    String field1,
 
-        @NotBlank(message = "Another field is required")
-        String field2
+    @NotBlank(message = "Another field is required")
+    String field2
 ) {}
 ```

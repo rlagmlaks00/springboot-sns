@@ -5,7 +5,7 @@ import com.apiece.springboot_sns.domain.common.DomainException;
 
 public class QuoteException extends DomainException {
 
-    public QuoteException(String message, DomainErrorCode errorCode) {
-        super(message, errorCode);
-    }
+  public QuoteException(String message, DomainErrorCode errorCode) {
+    super(message, errorCode);
+  }
 }

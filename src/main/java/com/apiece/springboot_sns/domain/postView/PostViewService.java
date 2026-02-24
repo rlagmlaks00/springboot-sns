@@ -9,21 +9,21 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class PostViewService {
 
-    private final PostViewRepository postViewRepository;
-    private final PostRepository postRepository;
+  private final PostViewRepository postViewRepository;
+  private final PostRepository postRepository;
 
-    public void incrementViewCount(Long postId) {
-        postViewRepository.increment(postId);
+  public void incrementViewCount(Long postId) {
+    postViewRepository.increment(postId);
+  }
+
+  @Transactional
+  public void syncSinglePost(String postIdStr) {
+    Long postId = Long.valueOf(postIdStr);
+    long count = postViewRepository.getAndResetCount(postId);
+
+    if (count > 0) {
+      postRepository.incrementViewCount(postId, count);
+      postViewRepository.removeDirty(postIdStr);
     }
-
-    @Transactional
-    public void syncSinglePost(String postIdStr) {
-        Long postId = Long.valueOf(postIdStr);
-        long count = postViewRepository.getAndResetCount(postId);
-
-        if (count > 0) {
-            postRepository.incrementViewCount(postId, count);
-            postViewRepository.removeDirty(postIdStr);
-        }
-    }
+  }
 }

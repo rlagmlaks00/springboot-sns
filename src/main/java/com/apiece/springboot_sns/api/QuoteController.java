@@ -24,29 +24,29 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class QuoteController {
 
-    private final QuoteService quoteService;
+  private final QuoteService quoteService;
 
-    /** 인용 게시글 생성 */
-    @PostMapping("/api/v1/quotes")
-    public ResponseEntity<PostResponse> createQuote(
-            @AuthUser User user, @Valid @RequestBody QuoteCreateRequest request) {
-        QuoteService.QuoteResult result = quoteService.createQuote(request.content(), user, request.quoteId());
-        return ResponseEntity.status(HttpStatus.CREATED).body(PostResponse.from(result.quote(), result.original()));
-    }
+  /** 인용 게시글 생성 */
+  @PostMapping("/api/v1/quotes")
+  public ResponseEntity<PostResponse> createQuote(
+      @AuthUser User user, @Valid @RequestBody QuoteCreateRequest request) {
+    QuoteService.QuoteResult result = quoteService.createQuote(request.content(), user, request.quoteId());
+    return ResponseEntity.status(HttpStatus.CREATED).body(PostResponse.from(result.quote(), result.original()));
+  }
 
-    /** 인용 게시글 목록 조회 */
-    @GetMapping("/api/v1/posts/{postId}/quotes")
-    public ResponseEntity<Page<PostResponse>> getQuotes(
-            @PathVariable Long postId,
-            @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<PostResponse> quotes = quoteService.getQuotes(postId, pageable).map(PostResponse::from);
-        return ResponseEntity.ok(quotes);
-    }
+  /** 인용 게시글 목록 조회 */
+  @GetMapping("/api/v1/posts/{postId}/quotes")
+  public ResponseEntity<Page<PostResponse>> getQuotes(
+      @PathVariable Long postId,
+      @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+    Page<PostResponse> quotes = quoteService.getQuotes(postId, pageable).map(PostResponse::from);
+    return ResponseEntity.ok(quotes);
+  }
 
-    /** 인용 게시글 삭제 */
-    @DeleteMapping("/api/v1/quotes/{quoteId}")
-    public ResponseEntity<Void> deleteQuote(@AuthUser User user, @PathVariable Long quoteId) {
-        quoteService.deleteQuote(user, quoteId);
-        return ResponseEntity.noContent().build();
-    }
+  /** 인용 게시글 삭제 */
+  @DeleteMapping("/api/v1/quotes/{quoteId}")
+  public ResponseEntity<Void> deleteQuote(@AuthUser User user, @PathVariable Long quoteId) {
+    quoteService.deleteQuote(user, quoteId);
+    return ResponseEntity.noContent().build();
+  }
 }

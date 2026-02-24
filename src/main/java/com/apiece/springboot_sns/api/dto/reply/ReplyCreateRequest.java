@@ -7,11 +7,11 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
 public record ReplyCreateRequest(
-        @NotBlank(message = "Content is required")
-        @Size(max = PostConstants.MAX_CONTENT_LENGTH, message = "Content must be at most 1000 characters")
-        String content,
+    @NotBlank(message = "Content is required")
+    @Size(max = PostConstants.MAX_CONTENT_LENGTH, message = "Content must be at most 1000 characters")
+    String content,
 
-        @NotNull(message = "Parent post ID is required")
-        @Positive(message = "Parent post ID must be positive")
-        Long parentId
+    @NotNull(message = "Parent post ID is required")
+    @Positive(message = "Parent post ID must be positive")
+    Long parentId
 ) {}

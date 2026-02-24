@@ -29,6 +29,10 @@ spring:
       mode: always
 post:
   edit-window: 1h
+media:
+  single-upload-max-size: 8388608
+  part-size: 8388608
+  presign-duration: PT10M
 rustfs:
   endpoint: http://localhost:9000
   console-port: 9001

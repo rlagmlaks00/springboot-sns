@@ -31,6 +31,40 @@ services:
       retries: 3
       start_period: 5s
 
+  rustfs:
+    image: minio/minio:latest
+    container_name: springboot-sns-rustfs
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: rustfsadmin
+      MINIO_ROOT_PASSWORD: rustfsadmin
+    volumes:
+      - rustfs-data:/data
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  mc-init:
+    image: minio/mc:latest
+    container_name: springboot-sns-mc-init
+    depends_on:
+      rustfs:
+        condition: service_healthy
+    entrypoint: >
+      /bin/sh -c "
+      mc alias set local http://rustfs:9000 rustfsadmin rustfsadmin &&
+      mc mb --ignore-existing local/media &&
+      echo 'Bucket created: media'
+      "
+    restart: "no"
+
 volumes:
   postgres-data:
   redis-data:
+  rustfs-data:

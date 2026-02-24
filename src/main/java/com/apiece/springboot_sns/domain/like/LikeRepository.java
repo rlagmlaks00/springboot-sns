@@ -7,9 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface LikeRepository extends JpaRepository<Like, Long> {
 
-    boolean existsByUserAndPost(User user, Post post);
+  boolean existsByUserAndPost(User user, Post post);
 
-    boolean existsByUserIdAndPostId(Long userId, Long postId);
+  boolean existsByUserIdAndPostId(Long userId, Long postId);
 
-    Optional<Like> findByUserAndPost(User user, Post post);
+  Optional<Like> findByUserAndPost(User user, Post post);
 }
