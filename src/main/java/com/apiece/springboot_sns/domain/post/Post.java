@@ -5,11 +5,15 @@ import com.apiece.springboot_sns.domain.user.User;
 import jakarta.persistence.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "posts")
@@ -42,6 +46,10 @@ public class Post extends BaseTimeEntity {
   @Column(name = "repost_id")
   private Long repostId;
 
+  @JdbcTypeCode(SqlTypes.ARRAY)
+  @Column(name = "media_ids", columnDefinition = "bigint[]")
+  private List<Long> mediaIds = new ArrayList<>();
+
   @Column(nullable = false)
   private Integer repostCount = 0;
 
@@ -55,9 +63,14 @@ public class Post extends BaseTimeEntity {
   private Long viewCount = 0L;
 
   public static Post create(String content, User user) {
+    return create(content, user, null);
+  }
+
+  public static Post create(String content, User user, List<Long> mediaIds) {
     Post post = new Post();
     post.content = content;
     post.user = user;
+    post.mediaIds = mediaIds != null ? new ArrayList<>(mediaIds) : new ArrayList<>();
     return post;
   }
 

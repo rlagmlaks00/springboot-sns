@@ -1,9 +1,14 @@
 package com.apiece.springboot_sns.domain.post;
 
 import com.apiece.springboot_sns.domain.common.DomainErrorCode;
+import com.apiece.springboot_sns.domain.media.MediaService;
 import com.apiece.springboot_sns.domain.user.User;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,10 +21,13 @@ public class PostService {
 
   private final PostRepository postRepository;
   private final PostProperties postProperties;
+  private final MediaService mediaService;
 
   /** 게시글 생성 */
-  public Post create(String content, User user) {
-    return postRepository.save(Post.create(content, user));
+  @Transactional
+  public Post create(String content, List<Long> mediaIds, User user) {
+    mediaService.validateMediasForPost(mediaIds, user.getId());
+    return postRepository.save(Post.create(content, user, mediaIds));
   }
 
   /** 게시글 수정 (dirty checking) */
@@ -50,7 +58,6 @@ public class PostService {
   }
 
   /** 게시글 단건 조회 */
-  @Transactional(readOnly = true)
   public Post getById(Long postId) {
     return postRepository.findByIdWithUser(postId)
         .orElseThrow(() -> new PostException("게시글을 찾을 수 없습니다.", DomainErrorCode.NOT_FOUND));
@@ -89,5 +96,19 @@ public class PostService {
       return postRepository.findByIdWithUser(post.getQuoteId());
     }
     return Optional.empty();
+  }
+
+  /** 게시글 목록의 원본 게시글 일괄 조회 (N+1 방지) */
+  public Map<Long, Post> findOriginalPosts(List<Post> posts) {
+    List<Long> originalIds = posts.stream()
+        .map(p -> p.getRepostId() != null ? p.getRepostId() : p.getQuoteId())
+        .filter(Objects::nonNull)
+        .distinct()
+        .collect(Collectors.toList());
+    if (originalIds.isEmpty()) {
+      return Map.of();
+    }
+    return postRepository.findAllByIdInWithUser(originalIds).stream()
+        .collect(Collectors.toMap(Post::getId, p -> p));
   }
 }

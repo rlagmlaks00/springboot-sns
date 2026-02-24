@@ -2,6 +2,7 @@ package com.apiece.springboot_sns.domain.media;
 
 import com.apiece.springboot_sns.domain.common.DomainErrorCode;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -78,14 +79,10 @@ public class MediaService {
     }
 
     try {
-      if (parts == null || parts.isEmpty()) {
-        media.markUploaded();
-        media.markCompleted();
-      } else {
+      if (parts != null && !parts.isEmpty()) {
         completeMultipartUpload(media.getPath(), media.getUploadId(), parts);
-        media.markUploaded();
-        media.markCompleted();
       }
+      media.markCompleted();
     } catch (Exception e) {
       log.error("Failed to complete upload for media {}", mediaId, e);
       media.markFailed();
@@ -93,22 +90,49 @@ public class MediaService {
     }
   }
 
+  public void validateMediasForPost(List<Long> mediaIds, Long userId) {
+    if (mediaIds == null || mediaIds.isEmpty()) {
+      return;
+    }
+    if (new HashSet<>(mediaIds).size() != mediaIds.size()) {
+      throw new MediaException("중복된 미디어 ID가 포함되어 있습니다.", DomainErrorCode.BAD_REQUEST);
+    }
+    List<Media> medias = mediaRepository.findAllById(mediaIds);
+    if (medias.size() != mediaIds.size()) {
+      throw new MediaException("존재하지 않는 미디어가 포함되어 있습니다.", DomainErrorCode.NOT_FOUND);
+    }
+    for (Media media : medias) {
+      if (!media.getUserId().equals(userId)) {
+        throw new MediaException("본인의 미디어만 사용할 수 있습니다.", DomainErrorCode.FORBIDDEN);
+      }
+      if (media.getStatus() != MediaStatus.COMPLETED) {
+        throw new MediaException("업로드가 완료되지 않은 미디어가 포함되어 있습니다.", DomainErrorCode.BAD_REQUEST);
+      }
+    }
+  }
+
   public String getPresignedUrl(Long mediaId, Long userId) {
+    Media media = findCompletedMedia(mediaId);
+    if (!media.getUserId().equals(userId)) {
+      throw new MediaException("Media does not belong to user", DomainErrorCode.FORBIDDEN);
+    }
+    return generatePresignedGetUrl(media.getPath());
+  }
+
+  public String getViewPresignedUrl(Long mediaId) {
+    return generatePresignedGetUrl(findCompletedMedia(mediaId).getPath());
+  }
+
+  private Media findCompletedMedia(Long mediaId) {
     Media media =
         mediaRepository
             .findById(mediaId)
             .orElseThrow(
                 () -> new MediaException("Media not found", DomainErrorCode.NOT_FOUND));
-
-    if (!media.getUserId().equals(userId)) {
-      throw new MediaException("Media does not belong to user", DomainErrorCode.FORBIDDEN);
-    }
-
     if (media.getStatus() != MediaStatus.COMPLETED) {
       throw new MediaException("Media is not completed", DomainErrorCode.BAD_REQUEST);
     }
-
-    return generatePresignedGetUrl(media.getPath());
+    return media;
   }
 
   private String generatePresignedGetUrl(String path) {

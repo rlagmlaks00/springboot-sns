@@ -9,6 +9,7 @@ import com.apiece.springboot_sns.domain.post.PostService;
 import com.apiece.springboot_sns.domain.user.User;
 import com.apiece.springboot_sns.domain.user.UserService;
 import jakarta.validation.Valid;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,7 +36,7 @@ public class PostController {
   @PostMapping("/api/v1/posts")
   public ResponseEntity<PostResponse> create(
       @AuthUser User user, @Valid @RequestBody PostCreateRequest request) {
-    Post post = postService.create(request.content(), user);
+    Post post = postService.create(request.content(), request.mediaIds(), user);
     return ResponseEntity.status(HttpStatus.CREATED).body(PostResponse.from(post));
   }
 
@@ -60,7 +61,8 @@ public class PostController {
   @GetMapping("/api/v1/posts/{postId}")
   public ResponseEntity<PostResponse> getById(@PathVariable Long postId) {
     Post post = postService.getById(postId);
-    return ResponseEntity.ok(toResponse(post));
+    Post original = postService.findOriginalPost(post).orElse(null);
+    return ResponseEntity.ok(PostResponse.from(post, original));
   }
 
   /** 사용자별 게시글 목록 조회 */
@@ -69,16 +71,11 @@ public class PostController {
       @PathVariable String username,
       @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
     User user = userService.getByUsername(username);
-    Page<PostResponse> posts =
-        postService.getPostsByUser(user, pageable).map(this::toResponse);
-    return ResponseEntity.ok(posts);
-  }
-
-  private PostResponse toResponse(Post post) {
-    Post original = postService.findOriginalPost(post).orElse(null);
-    if (original != null) {
-      return PostResponse.from(post, original);
-    }
-    return PostResponse.from(post);
+    Page<Post> posts = postService.getPostsByUser(user, pageable);
+    Map<Long, Post> originals = postService.findOriginalPosts(posts.getContent());
+    return ResponseEntity.ok(posts.map(post -> {
+      Long originalId = post.getRepostId() != null ? post.getRepostId() : post.getQuoteId();
+      return PostResponse.from(post, originalId != null ? originals.get(originalId) : null);
+    }));
   }
 }

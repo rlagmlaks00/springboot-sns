@@ -39,6 +39,12 @@ public class MediaController {
     return ResponseEntity.ok(MediaPresignedUrlResponse.from(id, presignedUrl));
   }
 
+  @GetMapping("/api/v1/media/{id}/view-url")
+  public ResponseEntity<MediaPresignedUrlResponse> getViewUrl(@PathVariable Long id) {
+    String presignedUrl = mediaService.getViewPresignedUrl(id);
+    return ResponseEntity.ok(MediaPresignedUrlResponse.from(id, presignedUrl));
+  }
+
   @PostMapping("/api/v1/media/uploaded")
   public ResponseEntity<Void> markUploaded(
       @AuthUser User user, @Valid @RequestBody MediaUploadedRequest request) {

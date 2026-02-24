@@ -1,6 +1,7 @@
 package com.apiece.springboot_sns.domain.post;
 
 import com.apiece.springboot_sns.domain.user.User;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +20,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
   @Query("SELECT p FROM Post p JOIN FETCH p.user WHERE p.id = :id")
   Optional<Post> findByIdWithUser(@Param("id") Long id);
+
+  @Query("SELECT p FROM Post p JOIN FETCH p.user WHERE p.id IN :ids")
+  List<Post> findAllByIdInWithUser(@Param("ids") List<Long> ids);
 
   @Query(value = "SELECT p FROM Post p JOIN FETCH p.user WHERE p.user = :user",
       countQuery = "SELECT count(p) FROM Post p WHERE p.user = :user")

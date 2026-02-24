@@ -29,7 +29,8 @@ public class SecurityConfig {
             auth ->
                 auth.requestMatchers(
                         "/api/v1/signup",
-                        "/api/v1/login")
+                        "/api/v1/login",
+                        "/api/v1/media/*/view-url")
                     .permitAll()
                     .anyRequest()
                     .authenticated())

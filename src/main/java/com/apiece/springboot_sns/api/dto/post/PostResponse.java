@@ -3,6 +3,7 @@ package com.apiece.springboot_sns.api.dto.post;
 import com.apiece.springboot_sns.domain.post.Post;
 import com.apiece.springboot_sns.domain.post.PostType;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public record PostResponse(
     Long id,
@@ -27,6 +28,8 @@ public record PostResponse(
 
     Long viewCount,
 
+    List<Long> mediaIds,
+
     OriginalPostResponse originalPost,
 
     LocalDateTime createdAt,
@@ -35,22 +38,7 @@ public record PostResponse(
 ) {
 
   public static PostResponse from(Post post) {
-    return new PostResponse(
-        post.getId(),
-        post.getContent(),
-        post.getUser().getUsername(),
-        post.getType(),
-        post.getParentId(),
-        post.getQuoteId(),
-        post.getRepostId(),
-        post.getRepostCount(),
-        post.getLikeCount(),
-        post.getReplyCount(),
-        post.getViewCount(),
-        null,
-        post.getCreatedAt(),
-        post.getUpdatedAt()
-    );
+    return from(post, null);
   }
 
   public static PostResponse from(Post post, Post original) {
@@ -66,6 +54,7 @@ public record PostResponse(
         post.getLikeCount(),
         post.getReplyCount(),
         post.getViewCount(),
+        post.getMediaIds() != null ? post.getMediaIds() : List.of(),
         original != null ? OriginalPostResponse.from(original) : null,
         post.getCreatedAt(),
         post.getUpdatedAt()
