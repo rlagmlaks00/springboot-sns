@@ -2,6 +2,7 @@ package com.apiece.springboot_sns.domain.post;
 
 import com.apiece.springboot_sns.domain.common.DomainErrorCode;
 import com.apiece.springboot_sns.domain.media.MediaService;
+import com.apiece.springboot_sns.domain.timeline.TimelineService;
 import com.apiece.springboot_sns.domain.user.User;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,12 +23,15 @@ public class PostService {
   private final PostRepository postRepository;
   private final PostProperties postProperties;
   private final MediaService mediaService;
+  private final TimelineService timelineService;
 
   /** 게시글 생성 */
   @Transactional
   public Post create(String content, List<Long> mediaIds, User user) {
     mediaService.validateMediasForPost(mediaIds, user.getId());
-    return postRepository.save(Post.create(content, user, mediaIds));
+    Post post = postRepository.save(Post.create(content, user, mediaIds));
+    timelineService.deliverToFollowers(post);
+    return post;
   }
 
   /** 게시글 수정 (dirty checking) */

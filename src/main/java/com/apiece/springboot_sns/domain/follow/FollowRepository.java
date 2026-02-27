@@ -1,6 +1,7 @@
 package com.apiece.springboot_sns.domain.follow;
 
 import com.apiece.springboot_sns.domain.user.User;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,4 +23,12 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
   @Modifying
   @Query("UPDATE Follow f SET f.deletedAt = CURRENT_TIMESTAMP WHERE f.id = :id")
   void softDelete(@Param("id") Long id);
+
+  /** 팬아웃을 위한 팔로워 ID 전체 조회 */
+  @Query("SELECT f.follower.id FROM Follow f WHERE f.following = :following")
+  List<Long> findFollowerIdsByFollowing(@Param("following") User following);
+
+  /** 내가 팔로우하는 사람 ID 전체 조회 */
+  @Query("SELECT f.following.id FROM Follow f WHERE f.follower = :follower")
+  List<Long> findFollowingIdsByFollower(@Param("follower") User follower);
 }
